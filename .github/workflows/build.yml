@@ -43,12 +43,13 @@ jobs:
 
     - name: Django Testing project
       run: |
-        python3 manage.py test
+        coverage run manage.py test
 
     - name: Coveralls Report
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        coveralls
 
   sonarcloud:
     name: SonarCloud
