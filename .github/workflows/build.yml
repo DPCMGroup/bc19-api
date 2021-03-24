@@ -47,10 +47,10 @@ jobs:
 
     - name: Coveralls Report
       env:
-        COVERALLS_SERVICE_NAME: github-actions
+        COVERALLS_SERVICE_NAME: github
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        coveralls
+        coveralls --service=github
 
   sonarcloud:
     name: SonarCloud
