@@ -1,1 +1,2 @@
 # bc19-api
+[![Build&Tests](https://github.com/DPCMGroup/bc19-api/actions/workflows/build.yml/badge.svg)](https://github.com/DPCMGroup/bc19-api/actions/workflows/build.yml)[![Coverage Status](https://coveralls.io/repos/github/DPCMGroup/bc19-api/badge.svg)](https://coveralls.io/github/DPCMGroup/bc19-api)[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DPCMGroup_bc19-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=DPCMGroup_bc19-api)
