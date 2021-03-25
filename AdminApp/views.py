@@ -20,14 +20,19 @@ def insertWorkstation(request):
     else:
         return JsonResponse("Wrong request method, required POST", safe=False)
 
+
 @csrf_exempt
 def getWorkstations(request):
     workstations = Workstation.objects.all()
     workstations_serializer = WorkstationSerializer(workstations, many=True)
     return JsonResponse(workstations_serializer.data, safe=False)
 
+
 @csrf_exempt
 def deleteWorkstation(request, id):
-    workstation = Workstation.objects.get(WorkstationId=id)
+    try:
+        workstation = Workstation.objects.get(WorkstationId=id)
+    except:
+        return JsonResponse("No object found", safe=False)
     workstation.delete()
-    return JsonResponse("Deleted Succeffully!!", safe=False)
+    return JsonResponse("Deleted Successfully!!", safe=False)
