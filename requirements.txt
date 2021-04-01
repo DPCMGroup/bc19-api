@@ -3,3 +3,4 @@ coverage==5.5
 coveralls==3.0.1
 django-cors-headers==3.7.0
 djangorestframework==3.12.2
+mysqlclient==2.0.3
