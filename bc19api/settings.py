@@ -92,8 +92,10 @@ if sys.argv[1] == 'test':
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': '~/Desktop/UniPD/SWE/bc19-api/my.cnf',
+            },
         }
     }
 
