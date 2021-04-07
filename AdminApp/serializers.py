@@ -1,10 +1,12 @@
 from rest_framework import serializers
-from AdminApp.models import Workstation
+from AdminApp.models import Workstations
 
 class WorkstationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Workstation
-        fields = ('WorkstationId',
-                  'Xposition',
-                  'Yposition',
-                  'Status')
+        model = Workstations
+        fields = ('workStationName',
+                  'xWorkStation',
+                  'yWorkStation',
+                  'idRroom',
+                  'state',
+                  'archived')
