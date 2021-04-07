@@ -4,9 +4,9 @@ from AdminApp.models import Workstations
 class WorkstationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workstations
-        fields = ('workStationName',
-                  'xWorkStation',
-                  'yWorkStation',
-                  'idRroom',
+        fields = ('workstationname',
+                  'xworkstation',
+                  'yworkstation',
+                  'idroom',
                   'state',
                   'archived')
