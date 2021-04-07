@@ -43,7 +43,7 @@ jobs:
         python manage.py migrate --database=unittest
     - name: Django Testing project
       run: |
-        coverage run manage.py test --database=unittest
+        coverage run manage.py test 
 
     - name: Coveralls Report
       env:
