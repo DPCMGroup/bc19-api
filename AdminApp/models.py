@@ -95,4 +95,4 @@ class Workstations(models.Model):
     class Meta:
         managed = False
         db_table = 'workStations'
-        unique_together = (('xworkstation', 'yworkstation'),)
+        unique_together = (('xworkstation', 'yworkstation', 'idroom'),)
