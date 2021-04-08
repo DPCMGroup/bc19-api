@@ -1,8 +1,10 @@
+from builtins import id
+
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 
-from AdminApp.models import Workstation
+from AdminApp.models import Workstations
 from AdminApp.serializers import WorkstationSerializer
 
 
@@ -23,7 +25,7 @@ def insertWorkstation(request):
 
 @csrf_exempt
 def getWorkstations(request):
-    workstations = Workstation.objects.all()
+    workstations = Workstations.objects.all()
     workstations_serializer = WorkstationSerializer(workstations, many=True)
     return JsonResponse(workstations_serializer.data, safe=False)
 
@@ -31,7 +33,7 @@ def getWorkstations(request):
 @csrf_exempt
 def deleteWorkstation(request, id):
     try:
-        workstation = Workstation.objects.get(WorkstationId=id)
+        workstation = Workstations.objects.get(id=id)
     except:
         return JsonResponse("No object found", safe=False)
     workstation.delete()

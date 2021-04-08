@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'bc19api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if sys.argv[1] == 'test':
+if 'test' in sys.argv:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -92,6 +92,12 @@ if sys.argv[1] == 'test':
 else:
     DATABASES = {
         'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': str(BASE_DIR / 'my.cnf'),
+            },
+        },
+        'unittest': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
