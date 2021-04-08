@@ -4,8 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 
-from AdminApp.models import Workstations
-from AdminApp.serializers import WorkstationSerializer
+from AdminApp.models import Workstations, Users
+from AdminApp.serializers import WorkstationSerializer, UserSerializer
 
 
 # Create your views here.
@@ -33,8 +33,23 @@ def getWorkstations(request):
 @csrf_exempt
 def deleteWorkstation(request, id):
     try:
-        workstation = Workstations.objects.get(id=id)
+        workstation = Workstations.objects.get(state=0)
     except:
-        return JsonResponse("No object found", safe=False)
+        return JsonResponse("No workstation found", safe=False)
     workstation.delete()
     return JsonResponse("Deleted Successfully!!", safe=False)
+
+@csrf_exempt
+def loginUser(request):
+    if request.method == 'POST':
+        user_data = JSONParser().parse(request)
+        try:
+            loginuser = Users.objects.get(username=str(user_data['username']), password=str(user_data['password']))
+            user_serializer = UserSerializer(loginuser, many=False)
+            return JsonResponse(user_serializer.data, safe=False)
+        except:
+            return JsonResponse("No user found", safe=False)
+
+
+
+

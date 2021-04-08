@@ -4,5 +4,6 @@ from AdminApp import views
 urlpatterns=[
     path('workstation/list', views.getWorkstations, name='list'),
     path('workstation/<int:id>', views.deleteWorkstation, name='delete'),
-    path('workstation/insert', views.insertWorkstation, name='insert')
+    path('workstation/insert', views.insertWorkstation, name='insert'),
+    path('user/login', views.loginUser, name='login'),
 ]
