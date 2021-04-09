@@ -86,6 +86,7 @@ class Users(models.Model):
 
 class Workstations(models.Model):
     workstationname = models.CharField(db_column='workStationName', unique=True, max_length=20)  # Field name made lowercase.
+    tag = models.CharField(unique=True, max_length=20)  # Field name made lowercase.
     xworkstation = models.PositiveSmallIntegerField(db_column='xWorkStation')  # Field name made lowercase.
     yworkstation = models.PositiveSmallIntegerField(db_column='yWorkStation')  # Field name made lowercase.
     idroom = models.ForeignKey(Rooms, models.DO_NOTHING, db_column='idRoom')  # Field name made lowercase.
