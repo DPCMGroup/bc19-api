@@ -33,7 +33,7 @@ def getWorkstations(request):
 @csrf_exempt
 def deleteWorkstation(request, id):
     try:
-        workstation = Workstations.objects.get(state=0)
+        workstation = Workstations.objects.get(id=id)
     except:
         return JsonResponse("No workstation found", safe=False)
     workstation.delete()
