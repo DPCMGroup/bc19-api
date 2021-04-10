@@ -81,7 +81,7 @@ def loginUser(request):
 
 @require_http_methods(["GET"])
 def userBookings(request, userId): #data - orainizio - orafine - postazione - stanza
-    bookings = Bookings.objects.filter(iduser=userId)
+    bookings = Bookings.objects.filter(iduser=userId, endtime__gte=datetime.now())
     array = []
     for book in bookings:
         dic = {}
