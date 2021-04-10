@@ -38,17 +38,6 @@ def deleteWorkstation(request, id):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def loginUser(request):
-    user_data = JSONParser().parse(request)
-    if Users.objects.exists(username=str(user_data['username']), password=str(user_data['password'])):
-        loginuser = Users.objects.get(username=str(user_data['username']), password=str(user_data['password']))
-        user_serializer = UserSerializer(loginuser, many=False)
-        return JsonResponse(user_serializer.data, safe=False)
-    else:
-        return JsonResponse("No user found", safe=False)
-
-@csrf_exempt
-@require_http_methods(["POST"])
 def getWorkstationStatus(request): #get id, nome, stato nome stanza e da chi eâ€™ prenotata
     tag_data = JSONParser().parse(request)
     tag = tag_data['tag']
@@ -59,6 +48,7 @@ def getWorkstationStatus(request): #get id, nome, stato nome stanza e da chi eâ€
     works = Workstations.objects.get(tag=tag)
     dic['workId'] = works.id
     dic['workName'] = works.workstationname
+    dic['workStatus'] = works.state
     dic['roomName'] = works.idroom.roomname
     dic['bookedToday'] = 0
 
@@ -67,13 +57,42 @@ def getWorkstationStatus(request): #get id, nome, stato nome stanza e da chi eâ€
         bookArray = []
         for book in bookings:
             bookDic = {}
+            bookDic['bookerId'] = book.iduser_id
+            bookDic['bookerUsername'] = book.iduser.username
             bookDic['bookerName'] = book.iduser.name
             bookDic['bookerSurname'] = book.iduser.surname
-            bookDic['from'] = book.starttime.strftime("%m/%d/%Y, %H:%M:%S")
-            bookDic['to'] = book.endtime.strftime("%m/%d/%Y, %H:%M:%S")
+            bookDic['from'] = book.starttime.strftime("%d/%m/%Y, %H:%M")
+            bookDic['to'] = book.endtime.strftime("%d/%m/%Y, %H:%M")
             bookArray.append(bookDic)
         dic['bookedToday'] = 1
         dic['bookings'] = bookArray
-
     return JsonResponse(json.dumps(dic), safe=False)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def loginUser(request):
+    user_data = JSONParser().parse(request)
+    if Users.objects.exists(username=str(user_data['username']), password=str(user_data['password'])):
+        loginuser = Users.objects.get(username=str(user_data['username']), password=str(user_data['password']))
+        user_serializer = UserSerializer(loginuser, many=False)
+        return JsonResponse(user_serializer.data, safe=False)
+    else:
+        return JsonResponse("No user found", safe=False)
+
+@require_http_methods(["GET"])
+def userBookings(request, userId): #data - orainizio - orafine - postazione - stanza
+    bookings = Bookings.objects.filter(iduser=userId)
+    array = []
+    for book in bookings:
+        dic = {}
+        dic['bookId'] = book.id
+        dic['workId'] = book.idworkstation_id
+        dic['workName'] = book.idworkstation.workstationname
+        dic['roomId'] = book.idworkstation.idroom_id
+        dic['roomName'] = book.idworkstation.idroom.roomname
+        dic['start'] = book.starttime.strftime("%d/%m/%Y, %H:%M")
+        dic['end'] = book.endtime.strftime("%d/%m/%Y, %H:%M")
+        array.append(dic)
+    return JsonResponse(json.dumps(array), safe=False)
+
 
