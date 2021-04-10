@@ -1,4 +1,3 @@
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
@@ -9,7 +8,6 @@ import json
 
 
 # Create your views here.
-@csrf_exempt
 @require_http_methods(["POST"])
 def insertWorkstation(request):
     workstation_data = JSONParser().parse(request)
@@ -27,6 +25,17 @@ def getWorkstations(request):
     return JsonResponse(workstations_serializer.data, safe=False)
 
 
+@require_http_methods(["POST"])
+def modifyWorkstation(request):
+    workstation_data = JSONParser().parse(request)
+    if not Workstations.objects.filter(id=workstation_data['id']):
+        return JsonResponse("nessuna workstation trovata", safe=False)
+    workstation = Workstations.objects.get(id=workstation_data['id'])
+    workstations_serializer = WorkstationSerializer(workstation, data=workstation_data)
+    if workstations_serializer.is_valid():
+        workstations_serializer.save()
+        return JsonResponse("modify Successfully!!", safe=False)
+
 @require_http_methods(["GET"])
 def deleteWorkstation(request, id):
     if Workstations.objects.exists(id=id):
@@ -36,7 +45,6 @@ def deleteWorkstation(request, id):
     workstation.delete()
     return JsonResponse("Deleted Successfully!!", safe=False)
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def getWorkstationStatus(request): #get id, nome, stato nome stanza e da chi eâ€™ prenotata
     tag_data = JSONParser().parse(request)
@@ -68,11 +76,10 @@ def getWorkstationStatus(request): #get id, nome, stato nome stanza e da chi eâ€
         dic['bookings'] = bookArray
     return JsonResponse(json.dumps(dic), safe=False)
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def loginUser(request):
     user_data = JSONParser().parse(request)
-    if Users.objects.exists(username=str(user_data['username']), password=str(user_data['password'])):
+    if Users.objects.filter(username=str(user_data['username']), password=str(user_data['password'])):
         loginuser = Users.objects.get(username=str(user_data['username']), password=str(user_data['password']))
         user_serializer = UserSerializer(loginuser, many=False)
         return JsonResponse(user_serializer.data, safe=False)

@@ -5,6 +5,7 @@ class WorkstationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workstations
         fields = ('id',
+                  'tag',
                   'workstationname',
                   'xworkstation',
                   'yworkstation',
