@@ -45,7 +45,7 @@ def deleteWorkstation(request, id):
     return JsonResponse("No workstation found", safe=False)
 
 @require_http_methods(["POST"])
-def getWorkstationStatus(request): #get id, nome, stato nome stanza e da chi e’ prenotata
+def getWorkstationStatus(request):
     tag_data = JSONParser().parse(request)
     tag = tag_data['tag']
     dic = {}
