@@ -56,10 +56,11 @@ def getWorkstationStatus(request):
     dic['workId'] = works.id
     dic['workName'] = works.workstationname
     dic['workStatus'] = works.state
+    dic['workSanitized'] = works.sanitized
     dic['roomName'] = works.idroom.roomname
     dic['bookedToday'] = 0
 
-    bookings = Bookings.objects.filter(idworkstation=works.id, endtime__gte=datetime.now(), endtime__day=datetime.now().day)
+    bookings = Bookings.objects.filter(idworkstation=works.id, endtime__gte=datetime.now(), endtime__day=datetime.now().day).order_by('-endtime')
     if bookings:
         bookArray = []
         for book in bookings:
