@@ -15,6 +15,10 @@ urlpatterns=[
     path('room/insert', views.insertRoom, name='roomInsert'),
     path('room/modify', views.modifyRoom, name='roomModify'),
     # user
+    path('user/list', views.getUsers, name='userList'),
+    path('user/del/<int:id>', views.deleteUser, name='userDelete'),
+    path('user/insert', views.insertUser, name='userInsert'),
+    path('user/modify', views.modifyUser, name='userModify'),
     path('user/login', views.loginUser, name='login'),
     path('user/bookings/<int:userId>', views.userBookings, name='userBookings'),
 ]

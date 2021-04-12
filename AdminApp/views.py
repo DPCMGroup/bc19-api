@@ -117,6 +117,42 @@ def deleteRoom(request, id):
     return JsonResponse("No room found", safe=False)
 
 @require_http_methods(["POST"])
+def insertUser(request):
+    user_data = JSONParser().parse(request)
+    user_serializer = UserSerializer(data=user_data)
+    if user_serializer.is_valid():
+        user_serializer.save()
+        return JsonResponse("Added Successfully!!", safe=False)
+    return JsonResponse("Failed to Add.", safe=False)
+
+
+@require_http_methods(["GET"])
+def getUsers(request):
+    users = Users.objects.all()
+    user_serializer = UserSerializer(users, many=True)
+    return JsonResponse(user_serializer.data, safe=False)
+
+
+@require_http_methods(["POST"])
+def modifyUser(request):
+    user_data = JSONParser().parse(request)
+    if not Users.objects.filter(id=user_data['id']):
+        return JsonResponse("nessun user trovato", safe=False)
+    user = Users.objects.get(id=user_data['id'])
+    user_serializer = UserSerializer(user, data=user_data)
+    if user_serializer.is_valid():
+        user_serializer.save()
+        return JsonResponse("modify Successfully!!", safe=False)
+
+@require_http_methods(["GET"])
+def deleteUser(request, id):
+    if Users.objects.filter(id=id):
+        user = Users.objects.get(id=id)
+        user.delete()
+        return JsonResponse("Deleted Successfully!!", safe=False)
+    return JsonResponse("No user found", safe=False)
+
+@require_http_methods(["POST"])
 def loginUser(request):
     user_data = JSONParser().parse(request)
     if Users.objects.filter(username=str(user_data['username']), password=str(user_data['password'])):
