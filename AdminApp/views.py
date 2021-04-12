@@ -76,11 +76,16 @@ def getWorkstationStatus(request):
     return JsonResponse(json.dumps(dic), safe=False)
 
 @require_http_methods(["POST"])
+def sanizieWorkstation(request):
+    data = JSONParser().parse(request)
+    pass
+
+@require_http_methods(["POST"])
 def insertRoom(request):
-    workstation_data = JSONParser().parse(request)
-    workstations_serializer = WorkstationSerializer(data=workstation_data)
-    if workstations_serializer.is_valid():
-        workstations_serializer.save()
+    room_data = JSONParser().parse(request)
+    room_serializer = RoomSerializer(data=room_data)
+    if room_serializer.is_valid():
+        room_serializer.save()
         return JsonResponse("Added Successfully!!", safe=False)
     return JsonResponse("Failed to Add.", safe=False)
 
@@ -96,7 +101,7 @@ def getRooms(request):
 def modifyRoom(request):
     room_data = JSONParser().parse(request)
     if not Rooms.objects.filter(id=room_data['id']):
-        return JsonResponse("nessuna workstation trovata", safe=False)
+        return JsonResponse("nessuna room trovata", safe=False)
     room = Rooms.objects.get(id=room_data['id'])
     room_serializer = RoomSerializer(room, data=room_data)
     if room_serializer.is_valid():
@@ -109,7 +114,7 @@ def deleteRoom(request, id):
         room = Rooms.objects.get(id=id)
         room.delete()
         return JsonResponse("Deleted Successfully!!", safe=False)
-    return JsonResponse("No workstation found", safe=False)
+    return JsonResponse("No room found", safe=False)
 
 @require_http_methods(["POST"])
 def loginUser(request):

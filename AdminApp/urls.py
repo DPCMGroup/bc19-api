@@ -8,6 +8,7 @@ urlpatterns=[
     path('workstation/insert', views.insertWorkstation, name='workstationInsert'),
     path('workstation/modify', views.modifyWorkstation, name='workstationModify'),
     path('workstation/getInfo', views.getWorkstationStatus, name='workstationInfo'),
+    path('workstation/sanitize', views.sanizieWorkstation, name='workstationSanitize'),
     #rooms
     path('room/list', views.getRooms, name='roomList'),
     path('room/del/<int:id>', views.deleteRoom, name='roomDelete'),
