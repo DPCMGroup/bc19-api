@@ -11,6 +11,7 @@ class WorkstationSerializer(serializers.ModelSerializer):
                   'yworkstation',
                   'idroom',
                   'state',
+                  'sanitized',
                   'archived')
 
 class UserSerializer(serializers.ModelSerializer):

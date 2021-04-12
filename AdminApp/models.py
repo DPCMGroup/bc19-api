@@ -91,6 +91,7 @@ class Workstations(models.Model):
     yworkstation = models.PositiveSmallIntegerField(db_column='yWorkStation')  # Field name made lowercase.
     idroom = models.ForeignKey(Rooms, models.DO_NOTHING, db_column='idRoom')  # Field name made lowercase.
     state = models.PositiveIntegerField()
+    sanitized = models.PositiveIntegerField()
     archived = models.IntegerField()
 
     class Meta:

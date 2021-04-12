@@ -1,8 +1,8 @@
 from django.views.decorators.http import require_http_methods
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from AdminApp.models import Workstations, Users, Rooms, Bookings
-from AdminApp.serializers import WorkstationSerializer, UserSerializer, RoomSerializer
+from AdminApp.models import Workstations, Users, Rooms, Bookings, Sanitizations
+from AdminApp.serializers import WorkstationSerializer, UserSerializer, RoomSerializer, SanitizaionSerializer
 from datetime import datetime
 import json
 
@@ -76,9 +76,19 @@ def getWorkstationStatus(request):
     return JsonResponse(json.dumps(dic), safe=False)
 
 @require_http_methods(["POST"])
-def sanizieWorkstation(request):
+def sanizieWorkstation(request): #idutente, tag, datetime
     data = JSONParser().parse(request)
-    pass
+    if not Workstations.objects.filter(tag=data['tag']):
+        return JsonResponse("no workstation found", safe=False)
+    if not Users.objects.filter(id=data['idUser']):
+        return JsonResponse("no user found", safe=False)
+    user = Users.objects.get(id=data['idUser'])
+    workstation = Workstations.objects.get(tag=data['tag'])
+    sanitize = Sanitizations.objects.create(idworkstation=workstation, iduser=user, sanitizationtime=data['data'])
+    workstation.sanitized = 1
+    sanitize.save()
+    workstation.save()
+    return JsonResponse("sanitize complete", safe=False)
 
 @require_http_methods(["POST"])
 def insertRoom(request):
