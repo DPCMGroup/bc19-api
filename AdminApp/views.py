@@ -4,18 +4,24 @@ from django.http.response import JsonResponse
 from AdminApp.models import Workstations, Users, Rooms, Bookings, Sanitizations
 from AdminApp.serializers import WorkstationSerializer, UserSerializer, RoomSerializer, SanitizaionSerializer
 from datetime import datetime
-import json
+
+WORK_THING = 4096  # 2^12
+ROOM_THING = 8192  # 2^13
+USER_THING = 16384  # 2^14
+
+FAILURE = 1  # 2^1
+NO_FOUND = 2  # 2^2
+OK = 4  # 2^3
 
 
-# Create your views here.
 @require_http_methods(["POST"])
 def insertWorkstation(request):
     workstation_data = JSONParser().parse(request)
     workstations_serializer = WorkstationSerializer(data=workstation_data)
     if workstations_serializer.is_valid():
         workstations_serializer.save()
-        return JsonResponse("Added Successfully!!", safe=False)
-    return JsonResponse("Failed to Add.", safe=False)
+        return JsonResponse(WORK_THING + OK, safe=False)
+    return JsonResponse(WORK_THING + FAILURE, safe=False)
 
 
 @require_http_methods(["GET"])
@@ -29,20 +35,22 @@ def getWorkstations(request):
 def modifyWorkstation(request):
     workstation_data = JSONParser().parse(request)
     if not Workstations.objects.filter(id=workstation_data['id']):
-        return JsonResponse("nessuna workstation trovata", safe=False)
+        return JsonResponse(WORK_THING + NO_FOUND, safe=False)
     workstation = Workstations.objects.get(id=workstation_data['id'])
     workstations_serializer = WorkstationSerializer(workstation, data=workstation_data)
     if workstations_serializer.is_valid():
         workstations_serializer.save()
-        return JsonResponse("modify Successfully!!", safe=False)
+        return JsonResponse(WORK_THING + OK, safe=False)
+
 
 @require_http_methods(["GET"])
 def deleteWorkstation(request, id):
     if Workstations.objects.filter(id=id):
         workstation = Workstations.objects.get(id=id)
         workstation.delete()
-        return JsonResponse("Deleted Successfully!!", safe=False)
-    return JsonResponse("No workstation found", safe=False)
+        return JsonResponse(WORK_THING + OK, safe=False)
+    return JsonResponse(WORK_THING + NO_FOUND, safe=False)
+
 
 @require_http_methods(["POST"])
 def getWorkstationStatus(request):
@@ -50,7 +58,7 @@ def getWorkstationStatus(request):
     tag = tag_data['tag']
     dic = {}
     if not Workstations.objects.filter(tag=tag):
-        return JsonResponse("Nessuna workstation trovata corrispondente al tag", safe=False)
+        return JsonResponse(WORK_THING + NO_FOUND, safe=False)
 
     works = Workstations.objects.get(tag=tag)
     dic['workId'] = works.id
@@ -60,7 +68,8 @@ def getWorkstationStatus(request):
     dic['roomName'] = works.idroom.roomname
     dic['bookedToday'] = 0
 
-    bookings = Bookings.objects.filter(idworkstation=works.id, endtime__gte=datetime.now(), endtime__day=datetime.now().day).order_by('-endtime')
+    bookings = Bookings.objects.filter(idworkstation=works.id, endtime__gte=datetime.now(),
+                                       endtime__day=datetime.now().day).order_by('-endtime')
     if bookings:
         bookArray = []
         for book in bookings:
@@ -74,22 +83,25 @@ def getWorkstationStatus(request):
             bookArray.append(bookDic)
         dic['bookedToday'] = 1
         dic['bookings'] = bookArray
-    return JsonResponse(json.dumps(dic), safe=False)
+
+    return JsonResponse(dic, safe=False)
+
 
 @require_http_methods(["POST"])
-def sanizieWorkstation(request): #idutente, tag, datetime
+def sanizieWorkstation(request):
     data = JSONParser().parse(request)
     if not Workstations.objects.filter(tag=data['tag']):
-        return JsonResponse("no workstation found", safe=False)
+        return JsonResponse(WORK_THING + NO_FOUND, safe=False)
     if not Users.objects.filter(id=data['idUser']):
-        return JsonResponse("no user found", safe=False)
+        return JsonResponse(USER_THING + NO_FOUND, safe=False)
     user = Users.objects.get(id=data['idUser'])
     workstation = Workstations.objects.get(tag=data['tag'])
     sanitize = Sanitizations.objects.create(idworkstation=workstation, iduser=user, sanitizationtime=data['data'])
     workstation.sanitized = 1
     sanitize.save()
     workstation.save()
-    return JsonResponse("sanitize complete", safe=False)
+    return JsonResponse(WORK_THING + OK, safe=False)
+
 
 @require_http_methods(["POST"])
 def insertRoom(request):
@@ -97,8 +109,8 @@ def insertRoom(request):
     room_serializer = RoomSerializer(data=room_data)
     if room_serializer.is_valid():
         room_serializer.save()
-        return JsonResponse("Added Successfully!!", safe=False)
-    return JsonResponse("Failed to Add.", safe=False)
+        return JsonResponse(ROOM_THING + OK, safe=False)
+    return JsonResponse(ROOM_THING + FAILURE, safe=False)
 
 
 @require_http_methods(["GET"])
@@ -112,20 +124,22 @@ def getRooms(request):
 def modifyRoom(request):
     room_data = JSONParser().parse(request)
     if not Rooms.objects.filter(id=room_data['id']):
-        return JsonResponse("nessuna room trovata", safe=False)
+        return JsonResponse(ROOM_THING + NO_FOUND, safe=False)
     room = Rooms.objects.get(id=room_data['id'])
     room_serializer = RoomSerializer(room, data=room_data)
     if room_serializer.is_valid():
         room_serializer.save()
-        return JsonResponse("modify Successfully!!", safe=False)
+        return JsonResponse(ROOM_THING + OK, safe=False)
+
 
 @require_http_methods(["GET"])
 def deleteRoom(request, id):
     if Rooms.objects.filter(id=id):
         room = Rooms.objects.get(id=id)
         room.delete()
-        return JsonResponse("Deleted Successfully!!", safe=False)
-    return JsonResponse("No room found", safe=False)
+        return JsonResponse(ROOM_THING + OK, safe=False)
+    return JsonResponse(ROOM_THING + NO_FOUND, safe=False)
+
 
 @require_http_methods(["POST"])
 def insertUser(request):
@@ -133,8 +147,8 @@ def insertUser(request):
     user_serializer = UserSerializer(data=user_data)
     if user_serializer.is_valid():
         user_serializer.save()
-        return JsonResponse("Added Successfully!!", safe=False)
-    return JsonResponse("Failed to Add.", safe=False)
+        return JsonResponse(USER_THING + OK, safe=False)
+    return JsonResponse(USER_THING + FAILURE, safe=False)
 
 
 @require_http_methods(["GET"])
@@ -148,20 +162,22 @@ def getUsers(request):
 def modifyUser(request):
     user_data = JSONParser().parse(request)
     if not Users.objects.filter(id=user_data['id']):
-        return JsonResponse("nessun user trovato", safe=False)
+        return JsonResponse(USER_THING + NO_FOUND, safe=False)
     user = Users.objects.get(id=user_data['id'])
     user_serializer = UserSerializer(user, data=user_data)
     if user_serializer.is_valid():
         user_serializer.save()
-        return JsonResponse("modify Successfully!!", safe=False)
+        return JsonResponse(USER_THING + OK, safe=False)
+
 
 @require_http_methods(["GET"])
 def deleteUser(request, id):
     if Users.objects.filter(id=id):
         user = Users.objects.get(id=id)
         user.delete()
-        return JsonResponse("Deleted Successfully!!", safe=False)
-    return JsonResponse("No user found", safe=False)
+        return JsonResponse(USER_THING + OK, safe=False)
+    return JsonResponse(USER_THING + NO_FOUND, safe=False)
+
 
 @require_http_methods(["POST"])
 def loginUser(request):
@@ -171,7 +187,8 @@ def loginUser(request):
         user_serializer = UserSerializer(loginuser, many=False)
         return JsonResponse(user_serializer.data, safe=False)
     else:
-        return JsonResponse("No user found", safe=False)
+        return JsonResponse(USER_THING + NO_FOUND, safe=False)
+
 
 @require_http_methods(["GET"])
 def userBookings(request, userId):
@@ -187,7 +204,4 @@ def userBookings(request, userId):
         dic['start'] = book.starttime.strftime("%d/%m/%Y, %H:%M")
         dic['end'] = book.endtime.strftime("%d/%m/%Y, %H:%M")
         array.append(dic)
-    return JsonResponse(json.dumps(array), safe=False)
-
-
-
+    return JsonResponse(array, safe=False)
