@@ -3,7 +3,7 @@ from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from AdminApp.models import Rooms
 from AdminApp.serializers import RoomSerializer
-import errorCode
+import AdminApp.Views.errorCode as errorCode
 
 @require_http_methods(["POST"])
 def insertRoom(request):

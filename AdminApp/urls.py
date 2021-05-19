@@ -3,7 +3,7 @@ from AdminApp.Views import room_view, user_view, workstation_view
 
 urlpatterns=[
     # workstation
-    path('workstation/list', workstation_view.getWorkstations, name='worstationList'),
+    path('workstation/list', workstation_view.getWorkstations, name='workstationList'),
     path('workstation/del/<int:id>', workstation_view.deleteWorkstation, name='workstationDelete'),
     path('workstation/insert', workstation_view.insertWorkstation, name='workstationInsert'),
     path('workstation/modify', workstation_view.modifyWorkstation, name='workstationModify'),

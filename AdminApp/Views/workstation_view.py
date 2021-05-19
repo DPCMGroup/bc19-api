@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from AdminApp.models import Workstations, Bookings, Sanitizations, Users
 from AdminApp.serializers import WorkstationSerializer
 from datetime import datetime
-import errorCode
+import AdminApp.Views.errorCode as errorCode
 
 @require_http_methods(["POST"])
 def insertWorkstation(request):

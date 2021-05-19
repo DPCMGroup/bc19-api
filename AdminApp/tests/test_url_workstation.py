@@ -6,7 +6,7 @@ from AdminApp.Views.workstation_view import insertWorkstation, deleteWorkstation
 class TestUrlsWorkstation(SimpleTestCase):
 
     def test_url_getworkstation(self):
-        url = reverse('worstationList')
+        url = reverse('workstationList')
         self.assertEqual(resolve(url).func, getWorkstations)
 
     def test_url_insertworkstation(self):

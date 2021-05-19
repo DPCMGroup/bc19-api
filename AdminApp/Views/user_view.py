@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from AdminApp.models import Bookings, Users
 from AdminApp.serializers import UserSerializer
 from datetime import datetime
-import errorCode
+import AdminApp.Views.errorCode as errorCode
 
 
 @require_http_methods(["POST"])

@@ -5,20 +5,7 @@ class WorkstationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workstations
         fields = ('id',
-                  'tag',{\n" +
-                "        \"id\": 1,\n" +
-                "        \"roomname\": \"lab1\",\n" +
-                "        \"xroom\": 10,\n" +
-                "        \"yroom\": 10,\n" +
-                "        \"archived\": 0\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"id\": 2,\n" +
-                "        \"roomname\": \"lab2\",\n" +
-                "        \"xroom\": 20,\n" +
-                "        \"yroom\": 20,\n" +
-                "        \"archived\": 0\n" +
-                "    }
+                  'tag',
                   'workstationname',
                   'xworkstation',
                   'yworkstation',
