@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from AdminApp.views import insertWorkstation, deleteWorkstation, getWorkstations, modifyWorkstation, getWorkstationStatus, sanizieWorkstation
+from AdminApp.Views.workstation_view import insertWorkstation, deleteWorkstation, getWorkstations, modifyWorkstation, getWorkstationStatus, sanizieWorkstation
 
 
 class TestUrlsWorkstation(SimpleTestCase):

@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework.test import APIRequestFactory
-from AdminApp.views import insertWorkstation, deleteWorkstation
+from AdminApp.Views.errorCode import insertWorkstation, deleteWorkstation
 
 
 class TestViews(TestCase):

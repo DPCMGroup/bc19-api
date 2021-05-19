@@ -1,24 +1,24 @@
 from django.urls import path
-from AdminApp import views
+from AdminApp.Views import room_view, user_view, workstation_view
 
 urlpatterns=[
     # workstation
-    path('workstation/list', views.getWorkstations, name='worstationList'),
-    path('workstation/del/<int:id>', views.deleteWorkstation, name='workstationDelete'),
-    path('workstation/insert', views.insertWorkstation, name='workstationInsert'),
-    path('workstation/modify', views.modifyWorkstation, name='workstationModify'),
-    path('workstation/getInfo', views.getWorkstationStatus, name='workstationInfo'),
-    path('workstation/sanitize', views.sanizieWorkstation, name='workstationSanitize'),
+    path('workstation/list', workstation_view.getWorkstations, name='worstationList'),
+    path('workstation/del/<int:id>', workstation_view.deleteWorkstation, name='workstationDelete'),
+    path('workstation/insert', workstation_view.insertWorkstation, name='workstationInsert'),
+    path('workstation/modify', workstation_view.modifyWorkstation, name='workstationModify'),
+    path('workstation/getInfo', workstation_view.getWorkstationStatus, name='workstationInfo'),
+    path('workstation/sanitize', workstation_view.sanizieWorkstation, name='workstationSanitize'),
     #rooms
-    path('room/list', views.getRooms, name='roomList'),
-    path('room/del/<int:id>', views.deleteRoom, name='roomDelete'),
-    path('room/insert', views.insertRoom, name='roomInsert'),
-    path('room/modify', views.modifyRoom, name='roomModify'),
+    path('room/list', room_view.getRooms, name='roomList'),
+    path('room/del/<int:id>', room_view.deleteRoom, name='roomDelete'),
+    path('room/insert', room_view.insertRoom, name='roomInsert'),
+    path('room/modify', room_view.modifyRoom, name='roomModify'),
     # user
-    path('user/list', views.getUsers, name='userList'),
-    path('user/del/<int:id>', views.deleteUser, name='userDelete'),
-    path('user/insert', views.insertUser, name='userInsert'),
-    path('user/modify', views.modifyUser, name='userModify'),
-    path('user/login', views.loginUser, name='login'),
-    path('user/bookings/<int:userId>', views.userBookings, name='userBookings'),
+    path('user/list', user_view.getUsers, name='userList'),
+    path('user/del/<int:id>', user_view.deleteUser, name='userDelete'),
+    path('user/insert', user_view.insertUser, name='userInsert'),
+    path('user/modify', user_view.modifyUser, name='userModify'),
+    path('user/login', user_view.loginUser, name='login'),
+    path('user/bookings/<int:userId>', user_view.userBookings, name='userBookings'),
 ]

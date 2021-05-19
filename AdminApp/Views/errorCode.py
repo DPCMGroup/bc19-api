@@ -1,0 +1,9 @@
+# type of error code
+FAILURE = 1  # 2^1
+NO_FOUND = 2  # 2^2
+OK = 4  # 2^3
+
+# major group specification
+WORK_THING = 4096  # 2^12
+ROOM_THING = 8192  # 2^13
+USER_THING = 16384  # 2^14

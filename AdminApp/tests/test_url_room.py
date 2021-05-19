@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from AdminApp.views import getRooms, insertRoom, deleteRoom, modifyRoom
+from AdminApp.Views.room_view import getRooms, insertRoom, deleteRoom, modifyRoom
 
 class TestUrlsRoom(SimpleTestCase):
 
