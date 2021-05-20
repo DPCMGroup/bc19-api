@@ -26,5 +26,5 @@ class TestUrlsUser(SimpleTestCase):
         self.assertEqual(resolve(url).func, loginUser)
 
     def test_url_userBookings(self):
-        url = reverse('userBookings')
+        url = reverse('userBookings', args=[1])
         self.assertEqual(resolve(url).func, userBookings)

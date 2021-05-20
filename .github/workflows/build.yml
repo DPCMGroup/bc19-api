@@ -45,7 +45,7 @@ jobs:
 
     - name: Django Testing project
       run: |
-        coverage run manage.py test 
+        coverage run manage.py test -n
 
     - name: Coveralls Report
       env:

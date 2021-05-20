@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'AdminApp.apps.AdminappConfig',
+    'test_without_migrations',
     'rest_framework'
 ]
 
@@ -80,7 +81,7 @@ WSGI_APPLICATION = 'bc19api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
+TEST_RUNNER = 'AdminApp.utils.UnManagedModelTestRunner'
 if 'test' in sys.argv:
     DATABASES = {
         'default': {

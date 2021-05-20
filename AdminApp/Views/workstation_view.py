@@ -33,6 +33,7 @@ def modifyWorkstation(request):
     if workstations_serializer.is_valid():
         workstations_serializer.save()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.WORK_THING + errorCode.FAILURE, safe=False)
 
 
 @require_http_methods(["GET"])
