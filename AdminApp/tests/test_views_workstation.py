@@ -1,7 +1,7 @@
 from AdminApp.Views.workstation_view import insertWorkstation, deleteWorkstation, modifyWorkstation, \
     getWorkstationStatus, sanizieWorkstation
 from AdminApp.Views import errorCode
-from AdminApp.tests.TestBase import TestViewBase
+from AdminApp.tests.test_base import TestViewBase
 from datetime import datetime
 
 

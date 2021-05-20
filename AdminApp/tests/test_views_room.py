@@ -1,6 +1,6 @@
 from AdminApp.Views.room_view import insertRoom, deleteRoom, modifyRoom
 from AdminApp.Views import errorCode
-from AdminApp.tests.TestBase import TestViewBase
+from AdminApp.tests.test_base import TestViewBase
 
 
 class TestViewsRoom(TestViewBase):

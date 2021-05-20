@@ -29,6 +29,7 @@ class TestViewBase(TestCase):
         self.user_delete_url = reverse('userDelete', args=[1])
         self.user_modify_url = reverse('userModify')
         self.user_list_url = reverse('userList')
+        self.user_login_url = reverse('login')
         self.user_bookings_url = reverse('userBookings', args=[1])
 
     def insertDefaultRoom(self, json):

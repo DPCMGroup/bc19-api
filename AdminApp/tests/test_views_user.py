@@ -1,6 +1,6 @@
 from AdminApp.Views.user_view import loginUser, deleteUser, insertUser, modifyUser, userBookings
 from AdminApp.Views import errorCode
-from AdminApp.tests.TestBase import TestViewBase
+from AdminApp.tests.test_base import TestViewBase
 
 
 class TestViewsRoom(TestViewBase):
@@ -12,7 +12,23 @@ class TestViewsRoom(TestViewBase):
         self.insertDefaultUser({"id": 2, "username": "mneri", "password": "000", "name": "mario", "surname": "neri",
                                 "mail": "mario.neri@gmail.com", "type": 0, "archived": 0})
 
-    #def test_loginUser_POST(self):
+    def test_userBookings_GET(self):
+        request = self.factory.get(self.user_bookings_url)
+        res = userBookings(request, 1)
+        self.assertEqual(res.status_code, 200)
+        self.assertJSONEqual(res.content, [])
+
+    def test_loginUser_POST(self):
+        request = self.factory.post(self.user_login_url, {'username': 'mrossi', 'password': 'wrong'}, format='json')
+        res = loginUser(request)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(int(res.content), errorCode.USER_THING + errorCode.NO_FOUND)
+        request = self.factory.post(self.user_login_url, {'username': 'mrossi', 'password': '000'}, format='json')
+        res = loginUser(request)
+        self.assertEqual(res.status_code, 200)
+        self.assertJSONEqual(res.content,
+                             {"id": 1, "username": "mrossi", "password": "000", "name": "mario", "surname": "rossi",
+                              "mail": "mario.rossi@gmail.com", "type": 0, "archived": 0})
 
     def test_deleteUser_NoObj_GET(self):
         request = self.factory.get(self.user_delete_url)
