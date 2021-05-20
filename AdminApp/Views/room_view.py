@@ -32,6 +32,7 @@ def modifyRoom(request):
     if room_serializer.is_valid():
         room_serializer.save()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.ROOM_THING + errorCode.FAILURE, safe=False)
 
 
 @require_http_methods(["GET"])

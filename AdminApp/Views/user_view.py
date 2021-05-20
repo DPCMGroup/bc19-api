@@ -34,6 +34,7 @@ def modifyUser(request):
     if user_serializer.is_valid():
         user_serializer.save()
         return JsonResponse(errorCode.USER_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.USER_THING + errorCode.FAILURE, safe=False)
 
 
 @require_http_methods(["GET"])

@@ -21,8 +21,15 @@ class TestViewBase(TestCase):
         self.workstation_sanitize_url = reverse('workstationSanitize')
         # room
         self.room_insert_url = reverse('roomInsert')
+        self.room_delete_url = reverse('roomDelete', args=[1])
+        self.room_modify_url = reverse('roomModify')
+        self.room_list_url = reverse('roomList')
         # user
         self.user_insert_url = reverse('userInsert')
+        self.user_delete_url = reverse('userDelete', args=[1])
+        self.user_modify_url = reverse('userModify')
+        self.user_list_url = reverse('userList')
+        self.user_bookings_url = reverse('userBookings', args=[1])
 
     def insertDefaultRoom(self, json):
         defRoom = self.factory.post(self.room_insert_url, json, format='json')
