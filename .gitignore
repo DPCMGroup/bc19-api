@@ -11,6 +11,8 @@
 .settings/
 *.sublime-workspace
 
+*.cnf
+
 ### Django ###
 *.log
 *.pot
