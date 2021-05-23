@@ -2,12 +2,11 @@ from web3 import Web3, HTTPProvider
 from threading import Thread
 import time
 import hashlib
-import traceback
 
 
 class Client:
 
-    def __init__(self, blockchain_address="http://127.0.0.1:8545"):
+    def __init__(self, blockchain_address="http://dpcm2077.duckdns.org:8545"):
         '''
         Costruisce un client per la comunicazione con la blockchain
         :param str blockchain_address: l'indirizzo, solitamente url, della blockchain
@@ -44,9 +43,6 @@ class Client:
             text = file.read()
             return self.hashAndSendData(text)
 
-
-
-    # return sendTransaction( f"\{ \"azione\": \"imposta stato postazione\", \"id postazione\": \"{id}\", \"stato\": \"{state}\"\}" )
 
     def log_loop(self, transaction_hash, poll_interval, callback_function, failure_callback_function):
         '''
@@ -94,7 +90,6 @@ class Client:
 
         print("started listening")
 
-    # per adesso non usare questa funzione
     def stopListening(self):
         self.running = False
         self.listeningThread.join()
