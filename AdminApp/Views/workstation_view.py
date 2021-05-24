@@ -1,10 +1,12 @@
 from django.views.decorators.http import require_http_methods
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from AdminApp.models import Workstations, Bookings, Sanitizations, Users
+from django.db.models import Q
+from AdminApp.models import Workstations, Bookings, Sanitizations, Users, WorkstationsFailures
 from AdminApp.serializers import WorkstationSerializer
 from datetime import datetime
-import AdminApp.Views.errorCode as errorCode
+from AdminApp.Views import errorCode
+
 
 @require_http_methods(["POST"])
 def insertWorkstation(request):
@@ -20,6 +22,16 @@ def insertWorkstation(request):
 def getWorkstations(request):
     workstations = Workstations.objects.all()
     workstations_serializer = WorkstationSerializer(workstations, many=True)
+    for workData in workstations_serializer.data:
+        if workData['state'] == 3:
+            workData['isDataSet'] = 0
+            failure = WorkstationsFailures.objects.filter(
+                Q(endtime__gte=datetime.now()) | Q(endtime__isnull=True), idworkstation=workData['id']).order_by('-starttime')
+            if failure:
+                workData['isDataSet'] = 1
+                workData['failureFrom'] = failure[0].starttime.strftime("%d/%m/%Y %H:%M")
+                workData['failureTo'] = failure[0].endtime.strftime("%d/%m/%Y %H:%M") if failure[0].endtime else 0
+
     return JsonResponse(workstations_serializer.data, safe=False)
 
 
@@ -71,8 +83,8 @@ def getWorkstationStatus(request):
             bookDic['bookerUsername'] = book.iduser.username
             bookDic['bookerName'] = book.iduser.name
             bookDic['bookerSurname'] = book.iduser.surname
-            bookDic['from'] = book.starttime.strftime("%d/%m/%Y, %H:%M")
-            bookDic['to'] = book.endtime.strftime("%d/%m/%Y, %H:%M")
+            bookDic['from'] = book.starttime.strftime("%d/%m/%Y %H:%M")
+            bookDic['to'] = book.endtime.strftime("%d/%m/%Y %H:%M")
             bookArray.append(bookDic)
         dic['bookedToday'] = 1
         dic['bookings'] = bookArray

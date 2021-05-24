@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from AdminApp.models import Bookings, Users
 from AdminApp.serializers import UserSerializer
 from datetime import datetime
-import AdminApp.Views.errorCode as errorCode
+from AdminApp.Views import errorCode
 
 
 @require_http_methods(["POST"])
@@ -68,7 +68,7 @@ def userBookings(request, userId):
         dic['workName'] = book.idworkstation.workstationname
         dic['roomId'] = book.idworkstation.idroom_id
         dic['roomName'] = book.idworkstation.idroom.roomname
-        dic['start'] = book.starttime.strftime("%d/%m/%Y, %H:%M")
-        dic['end'] = book.endtime.strftime("%d/%m/%Y, %H:%M")
+        dic['start'] = book.starttime.strftime("%d/%m/%Y %H:%M")
+        dic['end'] = book.endtime.strftime("%d/%m/%Y %H:%M")
         array.append(dic)
     return JsonResponse(array, safe=False)

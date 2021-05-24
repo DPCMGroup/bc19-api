@@ -62,6 +62,7 @@ class Rooms(models.Model):
     xroom = models.PositiveSmallIntegerField(db_column='xRoom')  # Field name made lowercase.
     yroom = models.PositiveSmallIntegerField(db_column='yRoom')  # Field name made lowercase.
     archived = models.IntegerField()
+    unavailable = models.IntegerField()
 
     class Meta:
         managed = False

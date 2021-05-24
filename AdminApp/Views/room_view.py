@@ -1,9 +1,11 @@
 from django.views.decorators.http import require_http_methods
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from AdminApp.models import Rooms
+from AdminApp.models import Rooms, RoomsFailures
 from AdminApp.serializers import RoomSerializer
-import AdminApp.Views.errorCode as errorCode
+from AdminApp.Views import errorCode
+from datetime import datetime
+from django.db.models import Q
 
 @require_http_methods(["POST"])
 def insertRoom(request):
@@ -19,6 +21,15 @@ def insertRoom(request):
 def getRooms(request):
     rooms = Rooms.objects.all()
     rooms_serializer = RoomSerializer(rooms, many=True)
+    for roomData in rooms_serializer.data:
+        if roomData['unavailable'] == 1:
+            roomData['isDataSet'] = 0
+            failure = RoomsFailures.objects.filter(
+                Q(endtime__gte=datetime.now()) | Q(endtime__isnull=True), idroom=roomData['id']).order_by('-starttime')
+            if failure:
+                roomData['isDataSet'] = 1
+                roomData['failureFrom'] = failure[0].starttime.strftime("%d/%m/%Y %H:%M")
+                roomData['failureTo'] = failure[0].endtime.strftime("%d/%m/%Y %H:%M") if failure[0].endtime else 0
     return JsonResponse(rooms_serializer.data, safe=False)
 
 
