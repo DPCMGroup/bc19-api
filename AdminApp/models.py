@@ -29,14 +29,23 @@ class Bookings(models.Model):
         db_table = 'bookings'
 
 
-class Failures(models.Model):
+class WorkstationsFailures(models.Model):
     idworkstation = models.ForeignKey('Workstations', models.DO_NOTHING, db_column='idWorkStation')  # Field name made lowercase.
     starttime = models.DateTimeField(db_column='startTime')  # Field name made lowercase.
     endtime = models.DateTimeField(db_column='endTime', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'failures'
+        db_table = 'workStationsFailures'
+
+class RoomsFailures(models.Model):
+    idroom = models.ForeignKey('Rooms', models.DO_NOTHING, db_column='idRoom')  # Field name made lowercase.
+    starttime = models.DateTimeField(db_column='startTime')  # Field name made lowercase.
+    endtime = models.DateTimeField(db_column='endTime', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'roomsFailures'
 
 
 class Reports(models.Model):
@@ -49,7 +58,6 @@ class Reports(models.Model):
 
 
 class Rooms(models.Model):
-    id = models.SmallAutoField(primary_key=True)
     roomname = models.CharField(db_column='roomName', unique=True, max_length=20)  # Field name made lowercase.
     xroom = models.PositiveSmallIntegerField(db_column='xRoom')  # Field name made lowercase.
     yroom = models.PositiveSmallIntegerField(db_column='yRoom')  # Field name made lowercase.
