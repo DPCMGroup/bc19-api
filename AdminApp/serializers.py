@@ -14,6 +14,7 @@ class WorkstationSerializer(serializers.ModelSerializer):
                   'sanitized',
                   'archived')
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
@@ -33,7 +34,8 @@ class RoomSerializer(serializers.ModelSerializer):
                   'roomname',
                   'xroom',
                   'yroom',
-                  'archived')
+                  'archived',
+                  'unavailable')
 
 class SanitizaionSerializer(serializers.ModelSerializer):
     class Meta:
