@@ -36,10 +36,18 @@ class Client:
         return tx_hash
 
     def hashAndSendData(self, dataString):
+        '''
+        Prende la stringa di input, ne ottiene l'hash e lo invia alla blockchain
+        Richiede una stringa (non byte)
+        '''
         hsh = self.hashString(dataString)
         return self.sendTransaction(hsh)
 
     def hashAndSendFile(self, filePath):
+        '''
+        Legge il file di input in una string, ne ottiene l'hash e lo invia alla blockchain
+        Richiede una stringa rappresentante il percorso di un file
+        '''
         with open(filePath, "r") as file:
             text = file.read()
             return self.hashAndSendData(text)
@@ -106,10 +114,11 @@ class Client:
 
     def hashString(self, string):
         '''
-        Resituisce l'hash di string in byte
+        Resituisce l'hash di string in byte.
+        Richiede una stringa (non byte)
         '''
-        m = hashlib.sha256()
         byteData = bytes(string, 'utf-8')
+        m = hashlib.sha256()
         m.update(byteData)
         digest = m.digest()
         # print(digest)
