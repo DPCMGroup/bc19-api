@@ -37,3 +37,9 @@ def deleteBooking(request, id):
         book.delete()
         return JsonResponse(errorCode.BOOK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.BOOK_THING + errorCode.NO_FOUND, safe=False)
+
+@require_http_methods(["GET"])
+def getBookings(request):
+    books = Bookings.objects.all()
+    book_serializer = BookingSerializer(books, many=True)
+    return JsonResponse(book_serializer.data, safe=False)

@@ -23,6 +23,7 @@ urlpatterns=[
     path('user/bookings/<int:userId>', user_view.userBookings, name='userBookings'),
     # bookings
     path('booking/insert', booking_view.insertBooking, name='bookingInsert'),
+    path('booking/list', booking_view.getBookings, name='bookingList'),
     path('booking/modify', booking_view.modifyBooking, name='bookingModify'),
     path('booking/del/<int:id>', booking_view.deleteBooking, name='bookingDelete'),
 ]
