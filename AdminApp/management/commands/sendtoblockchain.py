@@ -5,4 +5,3 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("è stato chiamato il comando per inviare informazioni alla blockchain")
-        report = getTodaysReport()
