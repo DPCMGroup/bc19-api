@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from AdminApp.models import Workstations, Users, Rooms, Sanitizations
+from AdminApp.models import Workstations, Users, Rooms, Sanitizations, Bookings
 
 class WorkstationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +13,15 @@ class WorkstationSerializer(serializers.ModelSerializer):
                   'state',
                   'sanitized',
                   'archived')
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookings
+        fields = ('id',
+                  'idworkstation',
+                  'iduser',
+                  'starttime',
+                  'endtime')
 
 
 class UserSerializer(serializers.ModelSerializer):

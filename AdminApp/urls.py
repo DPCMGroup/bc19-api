@@ -1,5 +1,5 @@
 from django.urls import path
-from AdminApp.Views import room_view, user_view, workstation_view
+from AdminApp.Views import room_view, user_view, workstation_view, booking_view
 
 urlpatterns=[
     # workstation
@@ -21,4 +21,8 @@ urlpatterns=[
     path('user/modify', user_view.modifyUser, name='userModify'),
     path('user/login', user_view.loginUser, name='login'),
     path('user/bookings/<int:userId>', user_view.userBookings, name='userBookings'),
+    # bookings
+    path('booking/insert', booking_view.insertBooking, name='bookingInsert'),
+    path('booking/modify', booking_view.modifyBooking, name='bookingModify'),
+    path('booking/del/<int:id>', booking_view.deleteBooking, name='bookingDelete'),
 ]
