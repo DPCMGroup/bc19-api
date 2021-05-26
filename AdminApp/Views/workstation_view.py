@@ -106,3 +106,9 @@ def sanizieWorkstation(request):
     sanitize.save()
     workstation.save()
     return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+
+@require_http_methods(["GET"])
+def workstationToSanitize(request):
+    dirty_workstations = Workstations.objects.filter(sanitized=0, archived=0)
+    workstation_serializer = WorkstationSerializer(dirty_workstations, many=True)
+    return JsonResponse(workstation_serializer.data, safe=False)

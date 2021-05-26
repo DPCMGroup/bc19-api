@@ -9,12 +9,13 @@ urlpatterns = [
     path('workstation/modify', workstation_view.modifyWorkstation, name='workstationModify'),
     path('workstation/getInfo', workstation_view.getWorkstationStatus, name='workstationInfo'),
     path('workstation/sanitize', workstation_view.sanizieWorkstation, name='workstationSanitize'),
+    path('workstation/dirty/list', workstation_view.workstationToSanitize, name='workstationToSanitize'),
     # rooms
     path('room/list', room_view.getRooms, name='roomList'),
     path('room/del/<int:id>', room_view.deleteRoom, name='roomDelete'),
     path('room/insert', room_view.insertRoom, name='roomInsert'),
     path('room/modify', room_view.modifyRoom, name='roomModify'),
-    path('room/sanitize/list', room_view.roomToSanitize, name='roomToSanitize'),
+    path('room/dirty/list', room_view.roomToSanitize, name='roomToSanitize'),
     # user
     path('user/list', user_view.getUsers, name='userList'),
     path('user/del/<int:id>', user_view.deleteUser, name='userDelete'),
