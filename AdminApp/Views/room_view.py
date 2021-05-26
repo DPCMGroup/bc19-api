@@ -29,8 +29,8 @@ def getRooms(request):
                 Q(endtime__gte=datetime.now()) | Q(endtime__isnull=True), idroom=roomData['id']).order_by('-starttime')
             if failure:
                 roomData['isDataSet'] = 1
-                roomData['failureFrom'] = failure[0].starttime.strftime("%d/%m/%Y %H:%M")
-                roomData['failureTo'] = failure[0].endtime.strftime("%d/%m/%Y %H:%M") if failure[0].endtime else 0
+                roomData['failureFrom'] = failure[0].starttime.strftime("%Y-%m-%d %H:%M")
+                roomData['failureTo'] = failure[0].endtime.strftime("%Y-%m-%d %H:%M") if failure[0].endtime else 0
     return JsonResponse(rooms_serializer.data, safe=False)
 
 

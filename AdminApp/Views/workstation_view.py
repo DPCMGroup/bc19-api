@@ -29,8 +29,8 @@ def getWorkstations(request):
                 Q(endtime__gte=datetime.now()) | Q(endtime__isnull=True), idworkstation=workData['id']).order_by('-starttime')
             if failure:
                 workData['isDataSet'] = 1
-                workData['failureFrom'] = failure[0].starttime.strftime("%d/%m/%Y %H:%M")
-                workData['failureTo'] = failure[0].endtime.strftime("%d/%m/%Y %H:%M") if failure[0].endtime else 0
+                workData['failureFrom'] = failure[0].starttime.strftime("%Y-%m-%d %H:%M")
+                workData['failureTo'] = failure[0].endtime.strftime("%Y-%m-%d %H:%M") if failure[0].endtime else 0
 
     return JsonResponse(workstations_serializer.data, safe=False)
 
@@ -83,8 +83,8 @@ def getWorkstationStatus(request):
             bookDic['bookerUsername'] = book.iduser.username
             bookDic['bookerName'] = book.iduser.name
             bookDic['bookerSurname'] = book.iduser.surname
-            bookDic['from'] = book.starttime.strftime("%d/%m/%Y %H:%M")
-            bookDic['to'] = book.endtime.strftime("%d/%m/%Y %H:%M")
+            bookDic['from'] = book.starttime.strftime("%Y-%m-%d %H:%M")
+            bookDic['to'] = book.endtime.strftime("%Y-%m-%d %H:%M")
             bookArray.append(bookDic)
         dic['bookedToday'] = 1
         dic['bookings'] = bookArray
