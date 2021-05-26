@@ -1,7 +1,7 @@
 from django.urls import path
 from AdminApp.Views import room_view, user_view, workstation_view, booking_view
 
-urlpatterns=[
+urlpatterns = [
     # workstation
     path('workstation/list', workstation_view.getWorkstations, name='workstationList'),
     path('workstation/del/<int:id>', workstation_view.deleteWorkstation, name='workstationDelete'),
@@ -9,11 +9,12 @@ urlpatterns=[
     path('workstation/modify', workstation_view.modifyWorkstation, name='workstationModify'),
     path('workstation/getInfo', workstation_view.getWorkstationStatus, name='workstationInfo'),
     path('workstation/sanitize', workstation_view.sanizieWorkstation, name='workstationSanitize'),
-    #rooms
+    # rooms
     path('room/list', room_view.getRooms, name='roomList'),
     path('room/del/<int:id>', room_view.deleteRoom, name='roomDelete'),
     path('room/insert', room_view.insertRoom, name='roomInsert'),
     path('room/modify', room_view.modifyRoom, name='roomModify'),
+    path('room/sanitize/list', room_view.roomToSanitize, name='roomToSanitize'),
     # user
     path('user/list', user_view.getUsers, name='userList'),
     path('user/del/<int:id>', user_view.deleteUser, name='userDelete'),

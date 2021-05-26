@@ -1,11 +1,12 @@
 from django.views.decorators.http import require_http_methods
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from AdminApp.models import Rooms, RoomsFailures
+from AdminApp.models import Rooms, RoomsFailures, Workstations
 from AdminApp.serializers import RoomSerializer
 from AdminApp.Views import errorCode
 from datetime import datetime
 from django.db.models import Q
+
 
 @require_http_methods(["POST"])
 def insertRoom(request):
@@ -53,3 +54,14 @@ def deleteRoom(request, id):
         room.delete()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)
+
+
+@require_http_methods(["GET"])
+def roomToSanitize(request):
+    roomSet = set()
+    dirty_workstations = Workstations.objects.filter(sanitized=0, archived=0)
+    for workst in dirty_workstations:
+        roomSet.add(workst.idroom_id)
+    dirty_rooms = Rooms.objects.filter(id__in=roomSet)
+    room_serializer = RoomSerializer(dirty_rooms, many=True)
+    return JsonResponse(room_serializer.data, safe=False)
