@@ -10,6 +10,7 @@ urlpatterns = [
     path('workstation/getInfo', workstation_view.getWorkstationStatus, name='workstationInfo'),
     path('workstation/sanitize', workstation_view.sanizieWorkstation, name='workstationSanitize'),
     path('workstation/dirty/list', workstation_view.workstationToSanitize, name='workstationToSanitize'),
+    path('workstation/bookable/list', workstation_view.getBookableWorkstations, name='getBookableWorkstations'),
     # rooms
     path('room/list', room_view.getRooms, name='roomList'),
     path('room/del/<int:id>', room_view.deleteRoom, name='roomDelete'),
