@@ -60,6 +60,7 @@ def deleteRoom(request, id):
 def insertRoomFailure(request):
     failure_data = JSONParser().parse(request)
     failure_serializer = RoomFailureSerializer(data=failure_data)
+    print(failure_data)
     if failure_serializer.is_valid():
         failure_serializer.save()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
