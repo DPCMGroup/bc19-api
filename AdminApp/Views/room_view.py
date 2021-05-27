@@ -91,8 +91,8 @@ def deleteRoomFailure(request, id):
 
 @require_http_methods(["GET"])
 def deleteRoomFailureByRoomId(request, roomid):
-    if RoomsFailures.objects.filter(roomid=roomid):
-        failure = RoomsFailures.objects.get(roomid=roomid)
+    if RoomsFailures.objects.filter(idroom=roomid):
+        failure = RoomsFailures.objects.get(idroom=roomid)
         failure.delete()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)
