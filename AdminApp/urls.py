@@ -10,6 +10,7 @@ urlpatterns=[
     path('workstation/getInfo', workstation_view.getWorkstationStatus, name='workstationInfo'),
     path('workstation/sanitize', workstation_view.sanizieWorkstation, name='workstationSanitize'),
     path('workstation/failure/del/<int:id>', workstation_view.deleteWorkstationFailure, name='workstationFailureDelete'),
+    path('workstation/failure/delall/<int:workid>', workstation_view.deleteWorkstationFailureByWorkstationId, name='workstationFailureDeleteByWorkstationId'),
     path('workstation/failure/insert', workstation_view.insertWorkstationFailure, name='workstationFailureInsert'),
     path('workstation/failure/modify', workstation_view.modifyWorkstationFailure, name='workstationFailureModify'),
     path('workstation/failure/list', workstation_view.getWorkstationsFailure, name='workstationFailureList'),
