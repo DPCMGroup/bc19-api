@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from AdminApp.models import Workstations, Users, Rooms, Sanitizations, Bookings
+from AdminApp.models import Workstations, Users, Rooms, Sanitizations, Bookings, Attendances
+
 
 class WorkstationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +14,16 @@ class WorkstationSerializer(serializers.ModelSerializer):
                   'state',
                   'sanitized',
                   'archived')
+
+
+class AttendencesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendances
+        fields = ('id',
+                  'idbooking',
+                  'starttime',
+                  'endtime')
+
 
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,6 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'type',
                   'archived')
 
+
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
@@ -45,6 +57,7 @@ class RoomSerializer(serializers.ModelSerializer):
                   'yroom',
                   'archived',
                   'unavailable')
+
 
 class SanitizaionSerializer(serializers.ModelSerializer):
     class Meta:
