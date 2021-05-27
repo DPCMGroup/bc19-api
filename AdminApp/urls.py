@@ -19,6 +19,7 @@ urlpatterns=[
     path('room/insert', room_view.insertRoom, name='roomInsert'),
     path('room/modify', room_view.modifyRoom, name='roomModify'),
     path('room/failure/del/<int:id>', room_view.deleteRoomFailure, name='roomFailureDelete'),
+    path('room/failure/delall/<int:roomid>', room_view.deleteRoomFailureByRoomId, name='roomFailureDeleteByRoomId'),
     path('room/failure/insert', room_view.insertRoomFailure, name='roomFailureInsert'),
     path('room/failure/modify', room_view.modifyRoomFailure, name='roomFailureModify'),
     path('room/failure/list', room_view.getRoomsFailure, name='roomFailureList'),
