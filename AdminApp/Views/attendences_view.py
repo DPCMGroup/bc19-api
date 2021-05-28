@@ -35,6 +35,8 @@ def insertOccupation(request):
             if difference.total_seconds() / 60 < 60:
                 # se mancano meno di 60 min dalla mia prenotazione, faccio partite l'occupazione
                 if next_book.iduser_id == data['iduser']:
+                    next_book.starttime = time_now
+                    next_book.save()
                     return insertAttendence(data['idworkstation'], next_book, time_now, next_book.endtime)
                 # troppo poco tempo, considero come occupato
                 return JsonResponse(errorCode.BOOK_THING + errorCode.EXISTS, safe=False)
