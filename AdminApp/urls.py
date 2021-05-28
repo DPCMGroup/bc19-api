@@ -11,6 +11,7 @@ urlpatterns = [
     path('workstation/sanitize', workstation_view.sanizieWorkstation, name='workstationSanitize'),
     path('workstation/dirty/list', workstation_view.workstationToSanitize, name='workstationToSanitize'),
     path('workstation/bookable/list', workstation_view.getBookableWorkstations, name='getBookableWorkstations'),
+    path('workstation/sanitizeall', workstation_view.sanitizeAllWorkstations, name='sanitizeAllWorkstations'),
     # rooms
     path('room/list', room_view.getRooms, name='roomList'),
     path('room/del/<int:id>', room_view.deleteRoom, name='roomDelete'),

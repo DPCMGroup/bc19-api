@@ -9,6 +9,25 @@ from AdminApp.Views import errorCode
 
 
 @require_http_methods(["POST"])
+def sanitizeAllWorkstations(request):
+    data = JSONParser().parse(request)
+    time_now = datetime.strptime(data['time'], "%Y-%m-%d %H:%M")
+    if not Users.objects.filter(id=data['iduser']):
+        return JsonResponse(errorCode.USER_THING + errorCode.NO_FOUND, safe=False)
+    cleaner = Users.objects.get(id=data['iduser'])
+    workstations = Workstations.objects.filter(idroom=data['idroom'], sanitized=0)
+    if not workstations:
+        return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
+    for dirtyWorks in workstations:
+        sanitize, create = Sanitizations.objects.get_or_create(idworkstation=dirtyWorks, iduser=cleaner,
+                                                               sanitizationtime=time_now)
+        dirtyWorks.sanitized = 1
+        sanitize.save()
+        dirtyWorks.save()
+    return JsonResponse(errorCode.SANITIZE_THING + errorCode.OK, safe=False)
+
+
+@require_http_methods(["POST"])
 def insertWorkstation(request):
     workstation_data = JSONParser().parse(request)
     workstations_serializer = WorkstationSerializer(data=workstation_data)
@@ -106,7 +125,7 @@ def sanizieWorkstation(request):
     workstation.sanitized = 1
     sanitize.save()
     workstation.save()
-    return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.SANITIZE_THING + errorCode.OK, safe=False)
 
 
 @require_http_methods(["GET"])

@@ -6,6 +6,7 @@ ARCHIVED = 8  # 2^3
 EXISTS = 16  # 2^4
 
 # major group specification
+SANITIZE_THING = 2048  # 2^11
 WORK_THING = 4096  # 2^12
 ROOM_THING = 8192  # 2^13
 USER_THING = 16384  # 2^14
