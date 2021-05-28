@@ -52,7 +52,7 @@ def loginUser(request):
     if Users.objects.filter(username=str(user_data['username']), password=str(user_data['password'])):
         loginuser = Users.objects.get(username=str(user_data['username']), password=str(user_data['password']))
         if loginuser.archived:
-            return JsonResponse(errorCode.USER_THING + errorCode.ARCHIVED)
+            return JsonResponse(errorCode.USER_THING + errorCode.ARCHIVED, safe=False)
         user_serializer = UserSerializer(loginuser, many=False)
         return JsonResponse(user_serializer.data, safe=False)
     else:

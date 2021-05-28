@@ -3,7 +3,7 @@ from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from django.db.models import Q
 from AdminApp.models import Workstations, Bookings, Sanitizations, Users, WorkstationsFailures
-from AdminApp.serializers import WorkstationSerializer
+from AdminApp.serializers import WorkstationSerializer, WorkstationFailureSerializer
 from datetime import datetime
 from AdminApp.Views import errorCode
 
@@ -158,3 +158,41 @@ def getBookableWorkstations(request):
                 availableWorkstations.append(workst)
     workstation_serializer = WorkstationSerializer(availableWorkstations, many=True)
     return JsonResponse(workstation_serializer.data, safe=False)
+
+@require_http_methods(["POST"])
+def insertWorkstationFailure(request):
+    failure_data = JSONParser().parse(request)
+    failure_serializer = WorkstationFailureSerializer(data=failure_data)
+    if failure_serializer.is_valid():
+        failure_serializer.save()
+        return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.WORK_THING + errorCode.FAILURE, safe=False)
+
+
+@require_http_methods(["POST"])
+def modifyWorkstationFailure(request):
+    failure_data = JSONParser().parse(request)
+    if not WorkstationsFailures.objects.filter(id=failure_data['id']):
+        return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
+    failure = WorkstationsFailures.objects.get(id=failure_data['id'])
+    failure_serializer = WorkstationFailureSerializer(failure, data=failure_data)
+    if failure_serializer.is_valid():
+        failure_serializer.save()
+        return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.WORK_THING + errorCode.FAILURE, safe=False)
+
+
+@require_http_methods(["GET"])
+def deleteWorkstationFailure(request, id):
+    if WorkstationsFailures.objects.filter(id=id):
+        failure = Workstations.objects.get(id=id)
+        failure.delete()
+        return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
+
+
+@require_http_methods(["GET"])
+def getWorkstationsFailure(request):
+    failures = WorkstationsFailures.objects.all()
+    failure_serializer = WorkstationFailureSerializer(failures, many=True)
+    return JsonResponse(failure_serializer.data, safe=False)

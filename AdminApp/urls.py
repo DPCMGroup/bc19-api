@@ -12,12 +12,20 @@ urlpatterns = [
     path('workstation/dirty/list', workstation_view.workstationToSanitize, name='workstationToSanitize'),
     path('workstation/bookable/list', workstation_view.getBookableWorkstations, name='getBookableWorkstations'),
     path('workstation/sanitizeall', workstation_view.sanitizeAllWorkstations, name='sanitizeAllWorkstations'),
-    # rooms
+    path('workstation/failure/del/<int:id>', workstation_view.deleteWorkstationFailure, name='workstationFailureDelete'),
+    path('workstation/failure/insert', workstation_view.insertWorkstationFailure, name='workstationFailureInsert'),
+    path('workstation/failure/modify', workstation_view.modifyWorkstationFailure, name='workstationFailureModify'),
+    path('workstation/failure/list', workstation_view.getWorkstationsFailure, name='workstationFailureList'),
+    #rooms
     path('room/list', room_view.getRooms, name='roomList'),
     path('room/del/<int:id>', room_view.deleteRoom, name='roomDelete'),
     path('room/insert', room_view.insertRoom, name='roomInsert'),
     path('room/modify', room_view.modifyRoom, name='roomModify'),
     path('room/dirty/list', room_view.roomToSanitize, name='roomToSanitize'),
+    path('room/failure/del/<int:id>', room_view.deleteRoomFailure, name='roomFailureDelete'),
+    path('room/failure/insert', room_view.insertRoomFailure, name='roomFailureInsert'),
+    path('room/failure/modify', room_view.modifyRoomFailure, name='roomFailureModify'),
+    path('room/failure/list', room_view.getRoomsFailure, name='roomFailureList'),
     # user
     path('user/list', user_view.getUsers, name='userList'),
     path('user/del/<int:id>', user_view.deleteUser, name='userDelete'),
