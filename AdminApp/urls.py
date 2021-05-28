@@ -31,4 +31,5 @@ urlpatterns = [
     path('booking/del/<int:id>', booking_view.deleteBooking, name='bookingDelete'),
     # attendences
     path('attendences/insert', attendences_view.insertOccupation, name='attendenceInsert'),
+    path('attendences/end', attendences_view.terminateOccupation, name='attendenceEnd'),
 ]

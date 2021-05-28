@@ -8,6 +8,23 @@ from AdminApp.Views import errorCode
 
 
 @require_http_methods(["POST"])
+def terminateOccupation(request):
+    data = JSONParser().parse(request)
+    time_now = datetime.strptime(data['time'], "%Y-%m-%d %H:%M")
+    if not Attendances.objects.filter(id=data['idattendence']):
+        return JsonResponse(errorCode.ATTENDENCES_THING + errorCode.NO_FOUND, safe=False)
+    attendence = Attendances.objects.get(id=data['idattendence'])
+    if time_now < attendence.endtime.replace(tzinfo=None):
+        attendence.idbooking.endtime = time_now
+        attendence.endtime = time_now
+        attendence.save()
+        attendence.idbooking.save()
+    attendence.idbooking.idworkstation.state = 0
+    attendence.idbooking.idworkstation.save()
+    return JsonResponse(errorCode.ATTENDENCES_THING + errorCode.OK, safe=False)
+
+
+@require_http_methods(["POST"])
 def insertOccupation(request):
     data = JSONParser().parse(request)
     # mi prendo tutte le prentoazioni di oggi della workstation
@@ -43,7 +60,8 @@ def insertOccupation(request):
             else:
                 # inserisco la prenotazione e l'occupazione
                 return insertBookingAndAttendence(idworkstation=data['idworkstation'], iduser=data['iduser'],
-                                                  starttime=time_now, endtime=next_book.starttime - timedelta(minutes=15))
+                                                  starttime=time_now,
+                                                  endtime=next_book.starttime - timedelta(minutes=15))
     else:
         # non sono presente alcune prenotazioni nella giornata di oggi
         return insertBookingAndAttendence(idworkstation=data['idworkstation'], iduser=data['iduser'],
