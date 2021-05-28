@@ -1,5 +1,5 @@
 from django.urls import path
-from AdminApp.Views import room_view, user_view, workstation_view, booking_view
+from AdminApp.Views import room_view, user_view, workstation_view, booking_view, attendences_view
 
 urlpatterns = [
     # workstation
@@ -29,4 +29,6 @@ urlpatterns = [
     path('booking/list', booking_view.getBookings, name='bookingList'),
     path('booking/modify', booking_view.modifyBooking, name='bookingModify'),
     path('booking/del/<int:id>', booking_view.deleteBooking, name='bookingDelete'),
+    # attendences
+    path('attendences/insert', attendences_view.insertOccupation, name='attendenceInsert'),
 ]
