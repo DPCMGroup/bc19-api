@@ -1,7 +1,7 @@
 from django.views.decorators.http import require_http_methods
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from AdminApp.models import Rooms, RoomsFailures
+from AdminApp.models import Rooms, RoomsFailures, Workstations
 from AdminApp.serializers import RoomSerializer, RoomFailureSerializer
 from AdminApp.Views import errorCode
 from datetime import datetime
@@ -29,8 +29,8 @@ def getRooms(request):
                 Q(endtime__gte=datetime.now()) | Q(endtime__isnull=True), idroom=roomData['id']).order_by('-starttime')
             if failure:
                 roomData['isDataSet'] = 1
-                roomData['failureFrom'] = failure[0].starttime.strftime("%d/%m/%Y %H:%M")
-                roomData['failureTo'] = failure[0].endtime.strftime("%d/%m/%Y %H:%M") if failure[0].endtime else 0
+                roomData['failureFrom'] = failure[0].starttime.strftime("%Y-%m-%d %H:%M")
+                roomData['failureTo'] = failure[0].endtime.strftime("%Y-%m-%d %H:%M") if failure[0].endtime else 0
     return JsonResponse(rooms_serializer.data, safe=False)
 
 
@@ -56,6 +56,17 @@ def deleteRoom(request, id):
     return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)
 
 
+@require_http_methods(["GET"])
+def roomToSanitize(request):
+    roomSet = set()
+    dirty_workstations = Workstations.objects.filter(sanitized=0, archived=0)
+    for workst in dirty_workstations:
+        roomSet.add(workst.idroom_id)
+    dirty_rooms = Rooms.objects.filter(id__in=roomSet)
+    room_serializer = RoomSerializer(dirty_rooms, many=True)
+    return JsonResponse(room_serializer.data, safe=False)
+  
+  
 @require_http_methods(["POST"])
 def insertRoomFailure(request):
     failure_data = JSONParser().parse(request)

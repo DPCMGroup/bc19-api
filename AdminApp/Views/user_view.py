@@ -70,7 +70,7 @@ def userBookings(request, userId):
         dic['workName'] = book.idworkstation.workstationname
         dic['roomId'] = book.idworkstation.idroom_id
         dic['roomName'] = book.idworkstation.idroom.roomname
-        dic['start'] = book.starttime.strftime("%d/%m/%Y %H:%M")
-        dic['end'] = book.endtime.strftime("%d/%m/%Y %H:%M")
+        dic['start'] = book.starttime.strftime("%Y-%m-%d %H:%M")
+        dic['end'] = book.endtime.strftime("%Y-%m-%d %H:%M")
         array.append(dic)
     return JsonResponse(array, safe=False)
