@@ -72,7 +72,8 @@ def modifyWorkstation(request):
 def deleteWorkstation(request, id):
     if Workstations.objects.filter(id=id):
         workstation = Workstations.objects.get(id=id)
-        workstation.delete()
+        workstation.archived = 1
+        workstation.save()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
 

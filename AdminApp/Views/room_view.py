@@ -51,7 +51,8 @@ def modifyRoom(request):
 def deleteRoom(request, id):
     if Rooms.objects.filter(id=id):
         room = Rooms.objects.get(id=id)
-        room.delete()
+        room.archived = 1
+        room.save()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)
 
