@@ -9,6 +9,25 @@ from AdminApp.Views import errorCode
 
 
 @require_http_methods(["POST"])
+def sanitizeAllWorkstations(request):
+    data = JSONParser().parse(request)
+    time_now = datetime.strptime(data['time'], "%Y-%m-%d %H:%M")
+    if not Users.objects.filter(id=data['iduser']):
+        return JsonResponse(errorCode.USER_THING + errorCode.NO_FOUND, safe=False)
+    cleaner = Users.objects.get(id=data['iduser'])
+    workstations = Workstations.objects.filter(idroom=data['idroom'], sanitized=0)
+    if not workstations:
+        return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
+    for dirtyWorks in workstations:
+        sanitize, create = Sanitizations.objects.get_or_create(idworkstation=dirtyWorks, iduser=cleaner,
+                                                               sanitizationtime=time_now)
+        dirtyWorks.sanitized = 1
+        sanitize.save()
+        dirtyWorks.save()
+    return JsonResponse(errorCode.SANITIZE_THING + errorCode.OK, safe=False)
+
+
+@require_http_methods(["POST"])
 def insertWorkstation(request):
     workstation_data = JSONParser().parse(request)
     workstations_serializer = WorkstationSerializer(data=workstation_data)
@@ -30,8 +49,8 @@ def getWorkstations(request):
                 '-starttime')
             if failure:
                 workData['isDataSet'] = 1
-                workData['failureFrom'] = failure[0].starttime.strftime("%d/%m/%Y %H:%M")
-                workData['failureTo'] = failure[0].endtime.strftime("%d/%m/%Y %H:%M") if failure[0].endtime else 0
+                workData['failureFrom'] = failure[0].starttime.strftime("%Y-%m-%d %H:%M")
+                workData['failureTo'] = failure[0].endtime.strftime("%Y-%m-%d %H:%M") if failure[0].endtime else 0
 
     return JsonResponse(workstations_serializer.data, safe=False)
 
@@ -84,8 +103,8 @@ def getWorkstationStatus(request):
             bookDic['bookerUsername'] = book.iduser.username
             bookDic['bookerName'] = book.iduser.name
             bookDic['bookerSurname'] = book.iduser.surname
-            bookDic['from'] = book.starttime.strftime("%d/%m/%Y %H:%M")
-            bookDic['to'] = book.endtime.strftime("%d/%m/%Y %H:%M")
+            bookDic['from'] = book.starttime.strftime("%Y-%m-%d %H:%M")
+            bookDic['to'] = book.endtime.strftime("%Y-%m-%d %H:%M")
             bookArray.append(bookDic)
         dic['bookedToday'] = 1
         dic['bookings'] = bookArray
@@ -106,8 +125,39 @@ def sanizieWorkstation(request):
     workstation.sanitized = 1
     sanitize.save()
     workstation.save()
-    return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.SANITIZE_THING + errorCode.OK, safe=False)
 
+
+@require_http_methods(["GET"])
+def workstationToSanitize(request):
+    dirty_workstations = Workstations.objects.filter(sanitized=0, archived=0)
+    workstation_serializer = WorkstationSerializer(dirty_workstations, many=True)
+    return JsonResponse(workstation_serializer.data, safe=False)
+
+
+@require_http_methods(["POST"])
+def getBookableWorkstations(request):
+    data = JSONParser().parse(request)
+    bookableWorkstations = Workstations.objects.filter(idroom=data['idRoom'])
+    availableWorkstations = []
+    for workst in bookableWorkstations:
+        if not Bookings.objects.filter((Q(starttime__gte=data['startTime']) & Q(starttime__lte=data['endTime'])) |
+                                       (Q(endtime__gte=data['startTime']) & Q(endtime__lte=data['endTime'])) |
+                                       (Q(starttime__lte=data['startTime']) & Q(endtime__gte=data['endTime'])),
+                                       idworkstation=workst.id):
+            if workst.state != 3:
+                availableWorkstations.append(workst)
+            elif not WorkstationsFailures.objects.filter(
+                    (Q(starttime__gte=data['startTime']) & Q(starttime__lte=data['endTime'])) |
+                    (Q(endtime__gte=data['startTime'], endtime__isnull=False)
+                     & Q(endtime__lte=data['endTime'], endtime__isnull=False)) |
+                    Q(starttime__lte=data['startTime'], endtime__isnull=True) |
+                    (Q(starttime__lte=data['startTime']) & Q(endtime__gte=data['endTime'], endtime__isnull=False)) |
+                    Q(starttime__lte=data['startTime'], endtime__isnull=True),
+                    idworkstation=workst.id):
+                availableWorkstations.append(workst)
+    workstation_serializer = WorkstationSerializer(availableWorkstations, many=True)
+    return JsonResponse(workstation_serializer.data, safe=False)
 
 @require_http_methods(["POST"])
 def insertWorkstationFailure(request):

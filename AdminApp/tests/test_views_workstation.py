@@ -34,7 +34,7 @@ class TestViewsWorkstation(TestViewBase):
                                     format='json')
         res = sanizieWorkstation(request)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(int(res.content), errorCode.WORK_THING + errorCode.OK)
+        self.assertEqual(int(res.content), errorCode.SANITIZE_THING + errorCode.OK)
 
     def test_getInfoWorkstation_POST(self):
         request = self.factory.post(self.workstation_getinfo_url, {'tag': 'sbagliato'}, format='json')
