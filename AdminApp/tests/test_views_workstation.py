@@ -9,7 +9,7 @@ class TestViewsWorkstation(TestViewBase):
 
     def setUp(self):
         super().setUp()
-        self.insertDefaultRoom({'id': 1, 'roomname': 'testRoomName', 'xroom': 10, 'yroom': 10, 'archived': 0})
+        self.insertDefaultRoom({'id': 1, 'roomname': 'testRoomName', 'xroom': 10, 'yroom': 10, 'archived': 0, 'unavailable': 0})
         self.insertDefaultWorkstation(
             {'id': 1, 'tag': 'aa aa aa aa aa', 'workstationname': 'testName1', 'xworkstation': 0, 'yworkstation': 0,
              'idroom': 1, 'state': 0, 'sanitized': 0, 'archived': 0})
@@ -34,7 +34,7 @@ class TestViewsWorkstation(TestViewBase):
                                     format='json')
         res = sanizieWorkstation(request)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(int(res.content), errorCode.WORK_THING + errorCode.OK)
+        self.assertEqual(int(res.content), errorCode.SANITIZE_THING + errorCode.OK)
 
     def test_getInfoWorkstation_POST(self):
         request = self.factory.post(self.workstation_getinfo_url, {'tag': 'sbagliato'}, format='json')
