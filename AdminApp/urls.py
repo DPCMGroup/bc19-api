@@ -13,6 +13,7 @@ urlpatterns = [
     path('workstation/bookable/list', workstation_view.getBookableWorkstations, name='getBookableWorkstations'),
     path('workstation/sanitizeall', workstation_view.sanitizeAllWorkstations, name='sanitizeAllWorkstations'),
     path('workstation/failure/del/<int:id>', workstation_view.deleteWorkstationFailure, name='workstationFailureDelete'),
+    path('workstation/failure/delall/<int:workid>', workstation_view.deleteWorkstationFailureByWorkstationId, name='workstationFailureDeleteByWorkstationId'),
     path('workstation/failure/insert', workstation_view.insertWorkstationFailure, name='workstationFailureInsert'),
     path('workstation/failure/modify', workstation_view.modifyWorkstationFailure, name='workstationFailureModify'),
     path('workstation/failure/list', workstation_view.getWorkstationsFailure, name='workstationFailureList'),

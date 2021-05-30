@@ -185,7 +185,15 @@ def modifyWorkstationFailure(request):
 @require_http_methods(["GET"])
 def deleteWorkstationFailure(request, id):
     if WorkstationsFailures.objects.filter(id=id):
-        failure = Workstations.objects.get(id=id)
+        failure = WorkstationsFailures.objects.get(id=id)
+        failure.delete()
+        return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
+
+@require_http_methods(["GET"])
+def deleteWorkstationFailureByWorkstationId(request, workid):
+    if WorkstationsFailures.objects.filter(idworkstation=workid):
+        failure = WorkstationsFailures.objects.get(idworkstation=workid)
         failure.delete()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
