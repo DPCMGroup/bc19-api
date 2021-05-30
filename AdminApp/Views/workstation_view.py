@@ -112,7 +112,6 @@ def sanizieWorkstation(request):
 @require_http_methods(["POST"])
 def insertWorkstationFailure(request):
     failure_data = JSONParser().parse(request)
-    print(failure_data);
     failure_serializer = WorkstationFailureSerializer(data=failure_data)
     if failure_serializer.is_valid():
         failure_serializer.save()
