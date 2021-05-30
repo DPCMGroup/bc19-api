@@ -59,6 +59,7 @@ def deleteRoom(request, id):
 @require_http_methods(["POST"])
 def insertRoomFailure(request):
     failure_data = JSONParser().parse(request)
+    print(failure_data);
     failure_serializer = RoomFailureSerializer(data=failure_data)
     if failure_serializer.is_valid():
         failure_serializer.save()
