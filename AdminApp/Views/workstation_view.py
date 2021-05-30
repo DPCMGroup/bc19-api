@@ -193,8 +193,9 @@ def deleteWorkstationFailure(request, id):
 @require_http_methods(["GET"])
 def deleteWorkstationFailureByWorkstationId(request, workid):
     if WorkstationsFailures.objects.filter(idworkstation=workid):
-        failure = WorkstationsFailures.objects.get(idworkstation=workid)
-        failure.delete()
+        failures = WorkstationsFailures.objects.filter(idworkstation=workid)
+        for f in failures:
+            f.delete()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
 
