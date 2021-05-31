@@ -65,7 +65,7 @@ def insertOccupation(request):
     else:
         # non sono presente alcune prenotazioni nella giornata di oggi
         return insertBookingAndAttendence(idworkstation=data['idworkstation'], iduser=data['iduser'],
-                                          starttime=time_now, endtime=time_now.replace(hour=18, minute=0, second=0))
+                                          starttime=time_now, endtime=time_now.replace(hour=23, minute=0, second=0))
 
 
 def insertAttendence(idworkstation, booking, starttime, endtime):
