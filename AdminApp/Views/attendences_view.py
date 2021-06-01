@@ -16,10 +16,10 @@ def terminateOccupation(request):
     if time_now < attendence.endtime.replace(tzinfo=None):
         attendence.idbooking.endtime = time_now
         attendence.endtime = time_now
-        attendence.save()
         attendence.idbooking.save()
     attendence.idbooking.idworkstation.state = 0
     attendence.idbooking.idworkstation.save()
+    attendence.save()
     return JsonResponse(errorCode.ATTENDENCES_THING + errorCode.OK, safe=False)
 
 
