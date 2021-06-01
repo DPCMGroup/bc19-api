@@ -41,7 +41,8 @@ def modifyUser(request):
 def deleteUser(request, id):
     if Users.objects.filter(id=id):
         user = Users.objects.get(id=id)
-        user.delete()
+        user.archived = 1
+        user.save()
         return JsonResponse(errorCode.USER_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.USER_THING + errorCode.NO_FOUND, safe=False)
 

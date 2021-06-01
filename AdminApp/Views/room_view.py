@@ -51,7 +51,8 @@ def modifyRoom(request):
 def deleteRoom(request, id):
     if Rooms.objects.filter(id=id):
         room = Rooms.objects.get(id=id)
-        room.delete()
+        room.archived = 1
+        room.save()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)
 
@@ -74,7 +75,10 @@ def insertRoomFailure(request):
     failure_serializer = RoomFailureSerializer(data=failure_data)
     print(failure_data)
     if failure_serializer.is_valid():
-        failure_serializer.save()
+        failure = failure_serializer.save()
+        if failure.starttime.replace(tzinfo=None) <= datetime.now():
+            failure.idroom.unavailable = 1
+            failure.idroom.save()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.ROOM_THING + errorCode.FAILURE, safe=False)
 
@@ -96,6 +100,8 @@ def modifyRoomFailure(request):
 def deleteRoomFailure(request, id):
     if RoomsFailures.objects.filter(id=id):
         failure = RoomsFailures.objects.get(id=id)
+        failure.idroom.unavailable = 0
+        failure.idroom.save()
         failure.delete()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)

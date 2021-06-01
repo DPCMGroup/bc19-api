@@ -23,6 +23,7 @@ class Bookings(models.Model):
     iduser = models.ForeignKey('Users', models.DO_NOTHING, db_column='idUser')  # Field name made lowercase.
     starttime = models.DateTimeField(db_column='startTime')  # Field name made lowercase.
     endtime = models.DateTimeField(db_column='endTime')  # Field name made lowercase.
+    archived = models.IntegerField(default=0)
 
     class Meta:
         managed = False
@@ -33,6 +34,7 @@ class WorkstationsFailures(models.Model):
     idworkstation = models.ForeignKey('Workstations', models.DO_NOTHING, db_column='idWorkStation')  # Field name made lowercase.
     starttime = models.DateTimeField(db_column='startTime')  # Field name made lowercase.
     endtime = models.DateTimeField(db_column='endTime', blank=True, null=True)  # Field name made lowercase.
+    archived = models.IntegerField(default=0)
 
     class Meta:
         managed = False
@@ -42,6 +44,7 @@ class RoomsFailures(models.Model):
     idroom = models.ForeignKey('Rooms', models.DO_NOTHING, db_column='idRoom')  # Field name made lowercase.
     starttime = models.DateTimeField(db_column='startTime')  # Field name made lowercase.
     endtime = models.DateTimeField(db_column='endTime', blank=True, null=True)  # Field name made lowercase.
+    archived = models.IntegerField(default=0)
 
     class Meta:
         managed = False

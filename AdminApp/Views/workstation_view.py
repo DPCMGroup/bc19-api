@@ -72,7 +72,8 @@ def modifyWorkstation(request):
 def deleteWorkstation(request, id):
     if Workstations.objects.filter(id=id):
         workstation = Workstations.objects.get(id=id)
-        workstation.delete()
+        workstation.archived = 1
+        workstation.save()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
 
@@ -164,7 +165,10 @@ def insertWorkstationFailure(request):
     failure_data = JSONParser().parse(request)
     failure_serializer = WorkstationFailureSerializer(data=failure_data)
     if failure_serializer.is_valid():
-        failure_serializer.save()
+        failure = failure_serializer.save()
+        if failure.starttime.replace(tzinfo=None) <= datetime.now():
+            failure.idworkstation.state = 3
+            failure.idworkstation.save()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.FAILURE, safe=False)
 
@@ -186,6 +190,8 @@ def modifyWorkstationFailure(request):
 def deleteWorkstationFailure(request, id):
     if WorkstationsFailures.objects.filter(id=id):
         failure = WorkstationsFailures.objects.get(id=id)
+        failure.idworkstation.state = 0
+        failure.idworkstation.save()
         failure.delete()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
