@@ -5,7 +5,7 @@ from django.db.models import Q
 
 def checkdatabase():
     print(datetime.now().strftime("%Y-%m-%d %H:%M") + ": chiamato il comando per controllare il database",
-          flush=True) and book.idworkstation.state == 0
+          flush=True)
     # controllo lo stato inizio failure
     workstationFailureStartList = WorkstationsFailures.objects.filter(
         Q(endtime__gte=datetime.now()) | Q(endtime__isnull=True), archived=0)
