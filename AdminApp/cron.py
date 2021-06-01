@@ -5,7 +5,7 @@ from django.db.models import Q
 
 def checkdatabase():
     print(datetime.now().strftime("%Y-%m-%d %H:%M") + ": chiamato il comando per controllare il database",
-          flush=True)
+          flush=True) and book.idworkstation.state == 0
     # controllo lo stato inizio failure
     workstationFailureStartList = WorkstationsFailures.objects.filter(
         Q(endtime__gte=datetime.now()) | Q(endtime__isnull=True), archived=0)
@@ -55,7 +55,7 @@ def checkdatabase():
     # controllo lo stato fine booking
     booksEnd = Bookings.objects.filter(endtime__lte=datetime.now(), archived=0)
     for book in booksEnd:
-        if book.idworkstation.state == 2:
+        if book.idworkstation.state != 0 and book.idworkstation.state != 3:
             book.idworkstation.state = 0
             book.idworkstation.save()
             book.archived = 1
@@ -67,7 +67,7 @@ def checkdatabase():
     # controllo lo stato inizio booking
     booksStart = Bookings.objects.filter(endtime__gte=datetime.now(), archived=0)
     for book in booksStart:
-        if book.starttime.replace(tzinfo=None) <= datetime.now():
+        if book.starttime.replace(tzinfo=None) <= datetime.now() and book.idworkstation.state == 0:
             book.idworkstation.state = 2
             book.idworkstation.save()
             print(datetime.now().strftime(
