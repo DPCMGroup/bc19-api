@@ -71,7 +71,9 @@ def roomToSanitize(request):
 @require_http_methods(["POST"])
 def insertRoomFailure(request):
     failure_data = JSONParser().parse(request)
+    print(failure_data);
     failure_serializer = RoomFailureSerializer(data=failure_data)
+    print(failure_data)
     if failure_serializer.is_valid():
         failure = failure_serializer.save()
         if failure.starttime.replace(tzinfo=None) <= datetime.now():
@@ -101,6 +103,16 @@ def deleteRoomFailure(request, id):
         failure.idroom.unavailable = 0
         failure.idroom.save()
         failure.delete()
+        return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)
+
+
+@require_http_methods(["GET"])
+def deleteRoomFailureByRoomId(request, roomid):
+    if RoomsFailures.objects.filter(idroom=roomid):
+        failures = RoomsFailures.objects.filter(idroom=roomid)
+        for f in failures:
+            f.delete()
         return JsonResponse(errorCode.ROOM_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.ROOM_THING + errorCode.NO_FOUND, safe=False)
 
