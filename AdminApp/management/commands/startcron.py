@@ -1,9 +1,12 @@
 from django.core.management.base import BaseCommand
 from AdminApp.cron import checkdatabase
+from time import sleep
 
 
 class Command(BaseCommand):
-    help = 'Fa un controllo nel database aggiornando gli stati delle postazioni o stanze'
+    help = 'esegue i jobs richiesti'
 
     def handle(self, *args, **options):
-        checkdatabase()
+        while True:
+            checkdatabase()
+            sleep(60)
