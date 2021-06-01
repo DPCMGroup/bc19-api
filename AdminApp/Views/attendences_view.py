@@ -28,6 +28,7 @@ def insertOccupation(request):
     data = JSONParser().parse(request)
     # mi prendo tutte le prentoazioni di oggi della workstation
     time_now = datetime.strptime(data['time'], "%Y-%m-%d %H:%M")
+    time_to_add = data['hour']
     today_max = time_now.replace(hour=23, minute=59, second=0, microsecond=0)
     today_bookings = Bookings.objects.filter(idworkstation=data['idworkstation'],
                                              endtime__range=(time_now, today_max)).order_by('starttime')
@@ -58,13 +59,23 @@ def insertOccupation(request):
                 return JsonResponse(errorCode.BOOK_THING + errorCode.EXISTS, safe=False)
             else:
                 # inserisco la prenotazione e l'occupazione
-                return insertBookingAndAttendence(idworkstation=data['idworkstation'], iduser=data['iduser'],
-                                                  starttime=time_now,
-                                                  endtime=next_book.starttime - timedelta(minutes=15))
+                endtime_refactor = time_now + timedelta(hours=time_to_add)
+                if time_to_add == 0:
+                    return insertBookingAndAttendence(idworkstation=data['idworkstation'], iduser=data['iduser'],
+                                                      starttime=time_now,
+                                                      endtime=next_book.starttime - timedelta(minutes=15))
+                else:
+                    endtime_refactor = endtime_refactor if endtime_refactor < next_book.starttime - timedelta(
+                        minutes=15) else next_book.starttime - timedelta(minutes=15)
+                    return insertBookingAndAttendence(idworkstation=data['idworkstation'], iduser=data['iduser'],
+                                                      starttime=time_now, endtime=endtime_refactor)
+
     else:
         # non sono presente alcune prenotazioni nella giornata di oggi
+        endtime_refactor = time_now.replace(hour=23, minute=0, second=0) if time_to_add == 0 else time_now + timedelta(
+            hours=time_to_add)
         return insertBookingAndAttendence(idworkstation=data['idworkstation'], iduser=data['iduser'],
-                                          starttime=time_now, endtime=time_now.replace(hour=23, minute=0, second=0))
+                                          starttime=time_now, endtime=endtime_refactor)
 
 
 def insertAttendence(idworkstation, booking, starttime, endtime):

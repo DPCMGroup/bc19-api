@@ -20,7 +20,7 @@ def insertRoom(request):
 
 @require_http_methods(["GET"])
 def getRooms(request):
-    rooms = Rooms.objects.all()
+    rooms = Rooms.objects.filter(archived=0)
     rooms_serializer = RoomSerializer(rooms, many=True)
     for roomData in rooms_serializer.data:
         if roomData['unavailable'] == 1:

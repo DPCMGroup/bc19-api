@@ -40,6 +40,7 @@ urlpatterns = [
     path('booking/list', booking_view.getBookings, name='bookingList'),
     path('booking/modify', booking_view.modifyBooking, name='bookingModify'),
     path('booking/del/<int:id>', booking_view.deleteBooking, name='bookingDelete'),
+    path('booking/gettimetonext', booking_view.getTimeUntilNextBooking, name='getTimeUntilNextBooking'),
     # attendences
     path('attendences/insert', attendences_view.insertOccupation, name='attendenceInsert'),
     path('attendences/end', attendences_view.terminateOccupation, name='attendenceEnd'),
