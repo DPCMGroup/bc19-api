@@ -1,5 +1,5 @@
 from web3 import Web3, HTTPProvider
-from threading import Thread
+from AdminApp.cron import txCompleteHandle, fail
 import time
 from datetime import datetime
 import hashlib
@@ -53,7 +53,7 @@ class Client:
             text = file.read()
             return self.hashAndSendStringData(text)
 
-    def log_loop(self, transaction_hash, poll_interval, callback_function, failure_callback_function, limit=None):
+    def log_loop(self, transaction_hash, poll_interval, limit=None):
         '''
         :param float poll_interval: l'intervallo tra le ispezioni eseguite sulla blockchain per trovare nuove transazioni minate
         :param callback_function: la funziona che verrà chiamata quando verrà rilevata una transazione eseguita
@@ -69,8 +69,8 @@ class Client:
                 tx = self.web3.eth.get_transaction(transaction_hash)
                 data = tx.input
                 # print(trans)
-                callback_function(self.bytesToString(transaction_hash), data)
-            except:
+                txCompleteHandle(self.bytesToString(transaction_hash), data)
+            except Exception as e:
                 # traceback.print_exc()
                 print(datetime.now().strftime("%Y-%m-%d %H:%M") + " transaction not found", flush=True)
                 if (limit != None):
@@ -78,11 +78,11 @@ class Client:
             time.sleep(poll_interval)
 
         if (count >= maxFailures):
-            failure_callback_function()
+            fail()
 
         print(datetime.now().strftime("%Y-%m-%d %H:%M") + " end of tx_loop", flush=True)
 
-    def startListening(self, transaction_hash, callback_function, failure_callback_function, limit=None):
+    def startListening(self, transaction_hash, limit=None):
         '''
         :param transaction_hash: l'hash della transazione per la quale aspettare il minaggio. Deve essere in byte
         :param callback_function: la funziona che verrà chiamata quando verrà rilevata una transazione minata.
@@ -91,7 +91,7 @@ class Client:
         # block_filter = self.web3.eth.filter('latest')
         # tx_filter = self.web3.eth.filter('pending')
         print(datetime.now().strftime("%Y-%m-%d %H:%M") + " started listening", flush=True)
-        self.log_loop(transaction_hash, 10, callback_function, failure_callback_function, limit)
+        self.log_loop(transaction_hash, 10, limit)
 
     def hashString(self, string):
         '''

@@ -2,6 +2,15 @@ from AdminApp.models import WorkstationsFailures, RoomsFailures, Bookings, Repor
 from datetime import datetime
 from django.db.models import Q
 
+def fail(self):
+    print(datetime.now().strftime("%Y-%m-%d %H:%M") + " fail", flush=True)
+
+def txCompleteHandle(tx_hash, data_hash):
+    # inserisco nel db
+    report = Reports.objects.create(reporttime=datetime.now().replace(second=0, microsecond=0), fileHash=data_hash,
+                                    blockchainhash=tx_hash)
+    print(datetime.now().strftime("%Y-%m-%d %H:%M") + " inserito report, id: " + str(report.id), flush=True)
+    report.save()
 
 def recurrentReport():
     # prendo i report di oggi in ordine desc
@@ -28,6 +37,7 @@ def createOccupationReport(starttime, endtime):
     for occupation in report_occupation:
         dic = {}
         dic['idoccupation'] = occupation.id
+        dic['idworkstation'] = occupation.idbooking.idworkstation.id
         dic['iduser'] = occupation.idbooking.iduser.id
         dic['username'] = occupation.idbooking.iduser.username
         dic['name'] = occupation.idbooking.iduser.name
@@ -45,6 +55,7 @@ def createSanificationReport(starttime, endtime):
     for sanification in report_sanification:
         dic = {}
         dic['idsanitize'] = sanification.id
+        dic['idworkstation'] = sanification.idworkstation.id
         dic['iduser'] = sanification.iduser.id
         dic['username'] = sanification.iduser.username
         dic['name'] = sanification.iduser.name

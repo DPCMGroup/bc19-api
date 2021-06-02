@@ -53,8 +53,8 @@ class RoomsFailures(models.Model):
 
 class Reports(models.Model):
     reporttime = models.DateTimeField(db_column='reportTime', unique=True)  # Field name made lowercase.
-    blockchainhash = models.CharField(db_column='blockchainHash', max_length=64)
-    fileHash = models.CharField(db_column='fileHash', max_length=64)
+    blockchainhash = models.CharField(db_column='blockchainHash', max_length=255)
+    fileHash = models.CharField(db_column='fileHash', max_length=255)
 
     class Meta:
         managed = False
