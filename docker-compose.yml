@@ -8,5 +8,8 @@ services:
     cron:
         build: .
         command: python manage.py startcron
+    report:
+        build: .
+        command: python manage.py sendtoblockchain
 
  
