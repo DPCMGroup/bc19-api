@@ -37,8 +37,9 @@ class Command(BaseCommand):
         # inserisco nel db
         report = Reports.objects.create(reporttime=datetime.now().replace(second=0, microsecond=0), fileHash=data_hash,
                                         blockchainhash=tx_hash)
-        print(datetime.now().strftime("%Y-%m-%d %H:%M") + "inserito report, id: " + str(report.id), flush=True)
+        print(datetime.now().strftime("%Y-%m-%d %H:%M") + " inserito report, id: " + str(report.id), flush=True)
         report.save()
 
     def fail(self):
+        print(datetime.now().strftime("%Y-%m-%d %H:%M") + " fail", flush=True)
         return

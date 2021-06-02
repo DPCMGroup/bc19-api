@@ -15,9 +15,6 @@ class Client:
         self.web3 = Web3(HTTPProvider(blockchain_address))
         self.web3.eth.defaultAccount = self.web3.eth.accounts[0]
         # il tread che si sta utilizzando per ascoltare la blockchain, se esistente, altrimento None
-        self.listeningThread = None
-        # quando running è false e il thread lo legge, esso si ferma
-        self.running = False
 
     def sendTransaction(self, stringData):
         '''
@@ -29,10 +26,10 @@ class Client:
         Resituisce l'hash della transazione inviata.
         '''
 
-        # byteData = bytes(dataString, 'utf-8');
+        # byteData = bytes(dataString, 'utf-8')
 
         tx_hash = self.web3.eth.send_transaction(
-            {'to': self.web3.eth.defaultAccount, 'from': self.web3.eth.defaultAccount, 'data': stringData});
+            {'to': self.web3.eth.defaultAccount, 'from': self.web3.eth.defaultAccount, 'data': stringData})
         return tx_hash
 
     def hashAndSendByteData(self, data):
@@ -63,19 +60,19 @@ class Client:
         '''
         found = False
         count = 0
-        maxFailures = limit if limit != None else 1;
-        while self.running and not found and not count >= maxFailures:
+        maxFailures = limit if limit != None else 1
+        while not found and not count >= maxFailures:
             try:
                 receipt = self.web3.eth.getTransactionReceipt(transaction_hash)
                 found = True
-                print(datetime.now().strftime("%Y-%m-%d %H:%M") + "transaction found", flush=True)
+                print(datetime.now().strftime("%Y-%m-%d %H:%M") + " transaction found", flush=True)
                 tx = self.web3.eth.get_transaction(transaction_hash)
                 data = tx.input
                 # print(trans)
                 callback_function(self.bytesToString(transaction_hash), data)
             except:
                 # traceback.print_exc()
-                print(datetime.now().strftime("%Y-%m-%d %H:%M") + "transaction not found", flush=True)
+                print(datetime.now().strftime("%Y-%m-%d %H:%M") + " transaction not found", flush=True)
                 if (limit != None):
                     count += 1
             time.sleep(poll_interval)
@@ -83,8 +80,7 @@ class Client:
         if (count >= maxFailures):
             failure_callback_function()
 
-        print(datetime.now().strftime("%Y-%m-%d %H:%M") + "end of thread", flush=True)
-        self.running = False
+        print(datetime.now().strftime("%Y-%m-%d %H:%M") + " end of tx_loop", flush=True)
 
     def startListening(self, transaction_hash, callback_function, failure_callback_function, limit=None):
         '''
@@ -94,22 +90,8 @@ class Client:
         '''
         # block_filter = self.web3.eth.filter('latest')
         # tx_filter = self.web3.eth.filter('pending')
-        self.listeningThread = Thread(target=self.log_loop,
-                                      args=(transaction_hash, 5, callback_function, failure_callback_function, limit),
-                                      daemon=True)  # daemon=True non so se sia la cosa giusta da usare
-        self.running = True
-        self.listeningThread.start()
-
-        print(datetime.now().strftime("%Y-%m-%d %H:%M") + "started listening", flush=True)
-
-    def stopListening(self):
-        self.running = False
-        self.listeningThread.join()
-        self.listeningThread = None
-        print(datetime.now().strftime("%Y-%m-%d %H:%M") + "stopped listening", flush=True)
-
-    def isAlive(self):
-        return (not self.listeningThread == None) and self.listeningThread.isAlive()
+        print(datetime.now().strftime("%Y-%m-%d %H:%M") + " started listening", flush=True)
+        self.log_loop(transaction_hash, 10, callback_function, failure_callback_function, limit)
 
     def hashString(self, string):
         '''
