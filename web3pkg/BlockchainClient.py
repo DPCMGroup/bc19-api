@@ -53,7 +53,7 @@ class Client:
         '''
         with open(filePath, "r") as file:
             text = file.read()
-            return self.hashAndSendData(text)
+            return self.hashAndSendStringData(text)
 
 
     def log_loop(self, transaction_hash, poll_interval, callback_function, failure_callback_function, limit = None):
