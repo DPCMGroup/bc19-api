@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from AdminApp.models import Workstations, Users, Rooms, Sanitizations, Bookings, Attendances, WorkstationsFailures, RoomsFailures
+from AdminApp.models import Workstations, Users, Rooms, Sanitizations, Bookings, Attendances, WorkstationsFailures, \
+    RoomsFailures, Reports
 
 
 class WorkstationSerializer(serializers.ModelSerializer):
@@ -15,6 +16,7 @@ class WorkstationSerializer(serializers.ModelSerializer):
                   'sanitized',
                   'archived')
 
+
 class WorkstationFailureSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkstationsFailures
@@ -23,6 +25,7 @@ class WorkstationFailureSerializer(serializers.ModelSerializer):
                   'starttime',
                   'endtime')
 
+
 class RoomFailureSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomsFailures
@@ -30,6 +33,7 @@ class RoomFailureSerializer(serializers.ModelSerializer):
                   'idroom',
                   'starttime',
                   'endtime')
+
 
 class AttendencesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -81,3 +85,12 @@ class SanitizaionSerializer(serializers.ModelSerializer):
                   'idworkstation',
                   'iduser',
                   'sanitizationtime')
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reports
+        fields = ('id',
+                  'reporttime',
+                  'blockchainhash',
+                  'fileHash')

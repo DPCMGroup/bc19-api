@@ -45,6 +45,7 @@ urlpatterns = [
     path('attendences/insert', attendences_view.insertOccupation, name='attendenceInsert'),
     path('attendences/end', attendences_view.terminateOccupation, name='attendenceEnd'),
     # report
-    path('report/occupations', report_view.getOccupationReport, name='attendenceEnd'),
-    path('report/sanitizations', report_view.getSanitizationReport, name='attendenceEnd'),
+    path('report/occupations', report_view.getOccupationReport, name='getOccupationReport'),
+    path('report/sanitizations', report_view.getSanitizationReport, name='getSanitizationReport'),
+    path('report/all', report_view.getSanitizationReport, name='reportAll'),
 ]
