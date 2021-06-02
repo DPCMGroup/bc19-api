@@ -6,7 +6,7 @@ import hashlib
 
 class Client:
 
-    def __init__(self, blockchain_address="http://localhost:8545"):
+    def __init__(self, blockchain_address="http://dpcm2077.duckdns.org:8545"):
         '''
         Costruisce un client per la comunicazione con la blockchain
         :param str blockchain_address: l'indirizzo, solitamente url, della blockchain
@@ -63,7 +63,7 @@ class Client:
         :param callback_function: la funziona che verrà chiamata quando verrà rilevata una transazione eseguita
         '''
         found = False
-        maxFailures = 3
+        maxFailures = 10
         count = 0
         while self.running and not found and not count >= maxFailures:
             try:
