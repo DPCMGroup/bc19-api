@@ -14,7 +14,7 @@ def txCompleteHandle(tx_hash, data_hash):
 
 def recurrentReport():
     # prendo i report di oggi in ordine desc
-    time_now = datetime.now().replace(second=0, microsecond=0)
+    time_now = datetime.now().replace(hour=23, minute=59, second=0, microsecond=0)
     time_midnight = time_now.replace(hour=0, minute=0, second=0, microsecond=0)
     today_report = Reports.objects.filter(reporttime__range=(time_midnight, time_now)).order_by(
         '-reporttime')
