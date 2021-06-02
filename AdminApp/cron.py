@@ -5,8 +5,8 @@ from django.db.models import Q
 
 def recurrentReport():
     # prendo i report di oggi in ordine desc
-    time_now = datetime.now()
-    time_midnight = time_now.replace(hour=0, minute=0)
+    time_now = datetime.now().replace(second=0, microsecond=0)
+    time_midnight = time_now.replace(hour=0, minute=0, second=0, microsecond=0)
     today_report = Reports.objects.filter(reporttime__range=(time_midnight, time_now)).order_by(
         '-reporttime')
     dic = {}

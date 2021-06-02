@@ -1,6 +1,7 @@
 from web3 import Web3, HTTPProvider
 from threading import Thread
 import time
+from datetime import datetime
 import hashlib
 
 
@@ -55,8 +56,7 @@ class Client:
             text = file.read()
             return self.hashAndSendStringData(text)
 
-
-    def log_loop(self, transaction_hash, poll_interval, callback_function, failure_callback_function, limit = None):
+    def log_loop(self, transaction_hash, poll_interval, callback_function, failure_callback_function, limit=None):
         '''
         :param float poll_interval: l'intervallo tra le ispezioni eseguite sulla blockchain per trovare nuove transazioni minate
         :param callback_function: la funziona che verrà chiamata quando verrà rilevata una transazione eseguita
@@ -68,25 +68,25 @@ class Client:
             try:
                 receipt = self.web3.eth.getTransactionReceipt(transaction_hash)
                 found = True
-                print("transaction found")
+                print(datetime.now().strftime("%Y-%m-%d %H:%M") + "transaction found", flush=True)
                 tx = self.web3.eth.get_transaction(transaction_hash)
                 data = tx.input
                 # print(trans)
                 callback_function(self.bytesToString(transaction_hash), data)
             except:
                 # traceback.print_exc()
-                print("transaction not found")
-                if(limit != None):
+                print(datetime.now().strftime("%Y-%m-%d %H:%M") + "transaction not found", flush=True)
+                if (limit != None):
                     count += 1
             time.sleep(poll_interval)
 
         if (count >= maxFailures):
             failure_callback_function()
 
-        print("end of thread")
+        print(datetime.now().strftime("%Y-%m-%d %H:%M") + "end of thread", flush=True)
         self.running = False
 
-    def startListening(self, transaction_hash, callback_function, failure_callback_function, limit = None):
+    def startListening(self, transaction_hash, callback_function, failure_callback_function, limit=None):
         '''
         :param transaction_hash: l'hash della transazione per la quale aspettare il minaggio. Deve essere in byte
         :param callback_function: la funziona che verrà chiamata quando verrà rilevata una transazione minata.
@@ -100,13 +100,13 @@ class Client:
         self.running = True
         self.listeningThread.start()
 
-        print("started listening")
+        print(datetime.now().strftime("%Y-%m-%d %H:%M") + "started listening", flush=True)
 
     def stopListening(self):
         self.running = False
         self.listeningThread.join()
         self.listeningThread = None
-        print("stopped listening")
+        print(datetime.now().strftime("%Y-%m-%d %H:%M") + "stopped listening", flush=True)
 
     def isAlive(self):
         return (not self.listeningThread == None) and self.listeningThread.isAlive()
@@ -129,7 +129,7 @@ class Client:
         Resituisce l'hash dei byte passati.
         Richiede byte in input
         '''
-        m= hashlib.sha256()
+        m = hashlib.sha256()
         m.update(data)
         digest = m.digest()
         hexString = self.bytesToString(digest)
@@ -140,10 +140,3 @@ class Client:
 
     def getHashFromReceipt(rec):
         return rec['input']
-
-
-
-
-
-
-
