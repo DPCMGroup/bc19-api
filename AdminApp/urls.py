@@ -1,5 +1,5 @@
 from django.urls import path
-from AdminApp.Views import room_view, user_view, workstation_view, booking_view, attendences_view
+from AdminApp.Views import room_view, user_view, workstation_view, booking_view, attendences_view, report_view
 
 urlpatterns = [
     # workstation
@@ -44,4 +44,7 @@ urlpatterns = [
     # attendences
     path('attendences/insert', attendences_view.insertOccupation, name='attendenceInsert'),
     path('attendences/end', attendences_view.terminateOccupation, name='attendenceEnd'),
+    # report
+    path('report/occupation', report_view.getOccupationReport, name='attendenceEnd'),
+    path('report/sanitizations', report_view.getSanitizationReport, name='attendenceEnd'),
 ]
