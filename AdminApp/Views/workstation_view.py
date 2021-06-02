@@ -39,7 +39,7 @@ def insertWorkstation(request):
 
 @require_http_methods(["GET"])
 def getWorkstations(request):
-    workstations = Workstations.objects.all()
+    workstations = Workstations.objects.filter(archived=0)
     workstations_serializer = WorkstationSerializer(workstations, many=True)
     for workData in workstations_serializer.data:
         if workData['state'] == 3:
@@ -72,7 +72,8 @@ def modifyWorkstation(request):
 def deleteWorkstation(request, id):
     if Workstations.objects.filter(id=id):
         workstation = Workstations.objects.get(id=id)
-        workstation.delete()
+        workstation.archived = 1
+        workstation.save()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
 
@@ -93,8 +94,10 @@ def getWorkstationStatus(request):
     dic['roomName'] = works.idroom.roomname
     dic['bookedToday'] = 0
 
-    bookings = Bookings.objects.filter(idworkstation=works.id, endtime__gte=datetime.now(),
-                                       endtime__day=datetime.now().day).order_by('-endtime')
+    time_now = datetime.now()
+    bookings = Bookings.objects.filter(idworkstation=works.id, endtime__gte=time_now,
+                                       endtime__day=time_now.day, endtime__month=time_now.month,
+                                       endtime__year=time_now.year).order_by('-endtime')
     if bookings:
         bookArray = []
         for book in bookings:
@@ -159,12 +162,16 @@ def getBookableWorkstations(request):
     workstation_serializer = WorkstationSerializer(availableWorkstations, many=True)
     return JsonResponse(workstation_serializer.data, safe=False)
 
+
 @require_http_methods(["POST"])
 def insertWorkstationFailure(request):
     failure_data = JSONParser().parse(request)
     failure_serializer = WorkstationFailureSerializer(data=failure_data)
     if failure_serializer.is_valid():
-        failure_serializer.save()
+        failure = failure_serializer.save()
+        if failure.starttime.replace(tzinfo=None) <= datetime.now():
+            failure.idworkstation.state = 3
+            failure.idworkstation.save()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.FAILURE, safe=False)
 
@@ -185,8 +192,20 @@ def modifyWorkstationFailure(request):
 @require_http_methods(["GET"])
 def deleteWorkstationFailure(request, id):
     if WorkstationsFailures.objects.filter(id=id):
-        failure = Workstations.objects.get(id=id)
+        failure = WorkstationsFailures.objects.get(id=id)
+        failure.idworkstation.state = 0
+        failure.idworkstation.save()
         failure.delete()
+        return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
+    return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
+
+
+@require_http_methods(["GET"])
+def deleteWorkstationFailureByWorkstationId(request, workid):
+    if WorkstationsFailures.objects.filter(idworkstation=workid):
+        failures = WorkstationsFailures.objects.filter(idworkstation=workid)
+        for f in failures:
+            f.delete()
         return JsonResponse(errorCode.WORK_THING + errorCode.OK, safe=False)
     return JsonResponse(errorCode.WORK_THING + errorCode.NO_FOUND, safe=False)
 

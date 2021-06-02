@@ -18,16 +18,16 @@ class WorkstationSerializer(serializers.ModelSerializer):
 class WorkstationFailureSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkstationsFailures
-        fields = ('id'
-                  'idworkstation'
+        fields = ('id',
+                  'idworkstation',
                   'starttime',
                   'endtime')
 
 class RoomFailureSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomsFailures
-        fields = ('id'
-                  'idroom'
+        fields = ('id',
+                  'idroom',
                   'starttime',
                   'endtime')
 
