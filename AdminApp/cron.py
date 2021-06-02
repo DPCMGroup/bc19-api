@@ -16,17 +16,9 @@ def recurrentReport():
     # prendo i report di oggi in ordine desc
     time_now = datetime.now().replace(hour=23, minute=59, second=0, microsecond=0)
     time_midnight = time_now.replace(hour=0, minute=0, second=0, microsecond=0)
-    today_report = Reports.objects.filter(reporttime__range=(time_midnight, time_now)).order_by(
-        '-reporttime')
     dic = {}
-    if not today_report:
-        # se non sono presenti report di oggi faccio un report a partire dalle 00
-        dic['occupations'] = createOccupationReport(time_midnight, time_now)
-        dic['sanitizations'] = createSanificationReport(time_midnight, time_now)
-    else:
-        # se e' presente faccio partire un report dal veccio orario
-        dic['occupations'] = createOccupationReport(today_report[0].reporttime, time_now)
-        dic['sanitizations'] = createSanificationReport(today_report[0].reporttime, time_now)
+    dic['occupations'] = createOccupationReport(time_midnight, time_now)
+    dic['sanitizations'] = createSanificationReport(time_midnight, time_now)
     return dic
 
 
