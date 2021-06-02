@@ -7,10 +7,10 @@ from AdminApp.cron import createOccupationReport, createSanificationReport
 @require_http_methods(["POST"])
 def getOccupationReport(request):
     data = JSONParser().parse(request)
-    return JsonResponse(createOccupationReport(data['starttime'], data['endtime']))
+    return JsonResponse(createOccupationReport(data['starttime'], data['endtime']), safe=False)
 
 
 @require_http_methods(["POST"])
 def getSanitizationReport(request):
     data = JSONParser().parse(request)
-    return JsonResponse(createSanificationReport(data['starttime'], data['endtime']))
+    return JsonResponse(createSanificationReport(data['starttime'], data['endtime']), safe=False)
