@@ -18,7 +18,7 @@ class Client:
         # quando running è false e il thread lo legge, esso si ferma
         self.running = False
 
-    def sendTransaction(self, byteData):
+    def sendTransaction(self, stringData):
         '''
         Invia una transazione dall'account di default all'account di default.
         Inserisce nella transazione i dati passati in byteData, che devono essere appunto byte.
@@ -31,10 +31,14 @@ class Client:
         # byteData = bytes(dataString, 'utf-8');
 
         tx_hash = self.web3.eth.send_transaction(
-            {'to': self.web3.eth.defaultAccount, 'from': self.web3.eth.defaultAccount, 'data': byteData});
+            {'to': self.web3.eth.defaultAccount, 'from': self.web3.eth.defaultAccount, 'data': stringData});
         return tx_hash
 
-    def hashAndSendData(self, dataString):
+    def hashAndSendByteData(self, data):
+        hsh = self.hashByteData(data)
+        return self.sendTransaction(hsh)
+
+    def hashAndSendStringData(self, dataString):
         '''
         Prende la stringa di input, ne ottiene l'hash e lo invia alla blockchain
         Richiede una stringa (non byte)
@@ -59,7 +63,7 @@ class Client:
         :param callback_function: la funziona che verrà chiamata quando verrà rilevata una transazione eseguita
         '''
         found = False
-        maxFailures = 3
+        maxFailures = 10
         count = 0
         while self.running and not found and not count >= maxFailures:
             try:
@@ -117,6 +121,17 @@ class Client:
         m.update(byteData)
         digest = m.digest()
         # print(digest)
+        hexString = self.bytesToString(digest)
+        return hexString
+
+    def hashByteData(self, data):
+        '''
+        Resituisce l'hash dei byte passati.
+        Richiede byte in input
+        '''
+        m= hashlib.sha256()
+        m.update(data)
+        digest = m.digest()
         hexString = self.bytesToString(digest)
         return hexString
 
