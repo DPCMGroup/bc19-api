@@ -47,5 +47,5 @@ urlpatterns = [
     # report
     path('report/occupations', report_view.getOccupationReport, name='getOccupationReport'),
     path('report/sanitizations', report_view.getSanitizationReport, name='getSanitizationReport'),
-    path('report/all', report_view.getSanitizationReport, name='reportAll'),
+    path('report/all', report_view.getReports, name='reportAll'),
 ]
