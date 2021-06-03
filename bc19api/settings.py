@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '*_s3km*fc-f*lr%scx=&@o&o+grv91!cqp^t+8e%@t_o&i*wl5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.210.35']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -40,8 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'AdminApp.apps.AdminappConfig',
+    'test_without_migrations',
     'rest_framework'
 ]
+
+REST_FRAMEWORK = {
+
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M",
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 #CORS_ORIGIN_WHITELIST = ('http://google.com')
@@ -51,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -81,8 +86,8 @@ WSGI_APPLICATION = 'bc19api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-if sys.argv[1] == 'test':
+TEST_RUNNER = 'AdminApp.utils.UnManagedModelTestRunner'
+if 'test' in sys.argv:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -92,6 +97,12 @@ if sys.argv[1] == 'test':
 else:
     DATABASES = {
         'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': str(BASE_DIR / 'my.cnf'),
+            },
+        },
+        'unittest': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
@@ -122,13 +133,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Rome'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
